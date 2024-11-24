@@ -42,12 +42,14 @@ import kotlin.math.roundToInt
 fun QuadLineChart(
     data: List<Pair<Int, Double>>,
 ) {
-    val spacing = dimensionResource(R.dimen.quad_line_chart_spacing).value // Reduced spacing to minimize horizontal padding
+    val spacing =
+        dimensionResource(R.dimen.quad_line_chart_spacing).value // Reduced spacing to minimize horizontal padding
     val columnTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
+
     val upperValue = remember(key1 = data) {
-        (data.maxOfOrNull { it.second }?.plus(1))?.roundToInt() ?: 0
+        (data.maxOfOrNull { it.second }?.let { it + it * 0.05 })?.roundToInt() ?: 0
     }
-    val lowerValue = remember(key1 = data) { (data.minOfOrNull { it.second }?.toInt() ?: 0) }
+    val lowerValue = remember(key1 = data) { (data.minOfOrNull { it.second }?.let { it - it * 0.02 }?.toInt() ?: 0) }
     val density = LocalDensity.current
 
     val textPaint = remember(density) {
