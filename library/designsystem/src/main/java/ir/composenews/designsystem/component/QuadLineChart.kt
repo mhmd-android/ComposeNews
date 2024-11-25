@@ -27,8 +27,10 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ir.composenews.designsystem.R
 import ir.composenews.designsystem.preview.ThemePreviews
 import ir.composenews.designsystem.theme.ComposeNewsTheme
 import ir.composenews.designsystem.theme.graphColor
@@ -40,12 +42,14 @@ import kotlin.math.roundToInt
 fun QuadLineChart(
     data: List<Pair<Int, Double>>,
 ) {
-    val spacing = 100f
+    val spacing =
+        dimensionResource(R.dimen.quad_line_chart_spacing).value // Reduced spacing to minimize horizontal padding
     val columnTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
+
     val upperValue = remember(key1 = data) {
-        (data.maxOfOrNull { it.second }?.plus(1))?.roundToInt() ?: 0
+        (data.maxOfOrNull { it.second }?.let { it + it * 0.05 })?.roundToInt() ?: 0
     }
-    val lowerValue = remember(key1 = data) { (data.minOfOrNull { it.second }?.toInt() ?: 0) }
+    val lowerValue = remember(key1 = data) { (data.minOfOrNull { it.second }?.let { it - it * 0.02 }?.toInt() ?: 0) }
     val density = LocalDensity.current
 
     val textPaint = remember(density) {
@@ -67,13 +71,14 @@ fun QuadLineChart(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp)
-            .padding(20.dp),
+            .height(dimensionResource(R.dimen.quad_line_chart_height))
+            .padding(dimensionResource(R.dimen.quad_line_chart_padding)),
     ) {
+        val textXDimen = dimensionResource(R.dimen.quad_line_chart_text_x_size).value
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp),
+                .height(dimensionResource(R.dimen.quad_line_chart_height)),
         ) {
             val spacePerHour = (size.width - spacing) / data.size
             val priceStep = (upperValue - lowerValue) / 5f
@@ -82,7 +87,7 @@ fun QuadLineChart(
                 drawContext.canvas.nativeCanvas.apply {
                     drawText(
                         round(lowerValue + priceStep * i).toString(),
-                        30f,
+                        textXDimen,
                         size.height - spacing - i * size.height / 5f,
                         textPaint,
                     )
@@ -107,7 +112,7 @@ fun QuadLineChart(
                     } else {
                         medX = (x1 + x2) / 2f
                         medY = (y1 + y2) / 2f
-                        quadraticBezierTo(x1 = x1, y1 = y1, x2 = medX, y2 = medY)
+                        quadraticTo(x1 = x1, y1 = y1, x2 = medX, y2 = medY)
                     }
                 }
             }

@@ -1,4 +1,4 @@
-@file:Suppress("MagicNumber")
+@file:Suppress("MagicNumber", "MaxLineLength", "LongMethod")
 
 package ir.composenews.designsystem.component
 
@@ -24,11 +24,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
@@ -41,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -55,7 +55,6 @@ import ir.composenews.designsystem.theme.lightUptrendGreen
 import kotlinx.coroutines.delay
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MarketItem(
     modifier: Modifier,
@@ -83,20 +82,22 @@ fun MarketItem(
             }
         },
         positionalThreshold = { positionalThreshold },
+        initialValue = SwipeToDismissBoxValue.EndToStart,
     )
 
     if (showFavoriteList) {
         AnimatedVisibility(visible = show, exit = fadeOut(spring())) {
-            SwipeToDismiss(
+            SwipeToDismissBox(
                 state = dismissState,
-                directions = setOf(SwipeToDismissBoxValue.EndToStart),
-                background = {
+                enableDismissFromStartToEnd = true,
+                enableDismissFromEndToStart = false,
+                backgroundContent = {
                     DismissBackgroundSwipe(
                         modifier = Modifier,
                         dismissState = dismissState,
                     )
                 },
-                dismissContent = {
+                content = {
                     MarketItemCard(
                         modifier = modifier,
                         name = name,
@@ -189,12 +190,22 @@ private fun MarketItemCard(
                 Text(text = "$price $", style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(6.dp))
                 Row {
-                    ArrowIconUpOrDown(priceChangePercentage24h)
+                    val color = when {
+                        priceChangePercentage24h.contains("-") -> {
+                            if (isSystemInDarkTheme()) darkDownTrendRed else lightDownTrendRed
+                        }
+
+                        else -> {
+                            if (isSystemInDarkTheme()) darkUptrendGreen else lightUptrendGreen
+                        }
+                    }
+
+                    ArrowIconUpOrDown(priceChangePercentage24h, tint = color)
+
                     Text(
                         text = "$priceChangePercentage24h %",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = if (priceChangePercentage24h.contains("-")) if (isSystemInDarkTheme()) darkDownTrendRed else lightDownTrendRed
-                        else if (isSystemInDarkTheme()) darkUptrendGreen else lightUptrendGreen,
+                        color = color,
                     )
                 }
             }
@@ -208,7 +219,7 @@ private fun MarketItemCard(
 }
 
 @Composable
-private fun ArrowIconUpOrDown(priceChangePercentage24h: String) {
+private fun ArrowIconUpOrDown(priceChangePercentage24h: String, tint: Color) {
     Icon(
         modifier = Modifier.size(size = 20.dp),
         painter = if (priceChangePercentage24h.contains("-")) {
@@ -217,8 +228,7 @@ private fun ArrowIconUpOrDown(priceChangePercentage24h: String) {
             painterResource(id = R.drawable.baseline_arrow_upward_24)
         },
         contentDescription = "",
-        tint = if (priceChangePercentage24h.contains("-")) if (isSystemInDarkTheme()) darkDownTrendRed else lightDownTrendRed
-        else if (isSystemInDarkTheme()) darkUptrendGreen else lightUptrendGreen,
+        tint = tint,
     )
 }
 

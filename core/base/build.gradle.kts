@@ -8,11 +8,10 @@ android {
 }
 
 dependencies {
-    projects.library.apply {
-        api(projects.core.test)
-        implementation(projects.library.designsystem)
+    projects.apply {
+        api(core.test)
+        api(core.network.ktor)
+        implementation(library.designsystem)
     }
-    libs.apply {
-        implementation(lifecycle.viewmodel.ktx)
-    }
+    implementation(libs.lifecycle.viewmodel.ktx)
 }
