@@ -1,6 +1,5 @@
 package ir.composenews.localdatasource.database
 
-
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import ir.composenews.db.MarketDatabase
