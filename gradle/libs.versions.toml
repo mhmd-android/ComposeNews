@@ -11,7 +11,7 @@ kotlin = "2.0.21"
 kotlinter = "3.16.0"
 ksp = "2.0.21-1.0.28"
 kotlinxImmutableCollection = "0.3.8"
-androidGradlePlugin = "8.7.2"
+androidGradlePlugin = "8.7.3"
 
 ktx = "1.15.0"
 
