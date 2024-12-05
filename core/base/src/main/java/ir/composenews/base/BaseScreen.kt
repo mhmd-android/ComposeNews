@@ -67,13 +67,17 @@ private fun BaseScreen(
                     }
                 }
 
-                BaseContract.BaseState.OnLoadingDialog -> TODO()
+                BaseContract.BaseState.OnLoadingDialog -> {
+                    TODO()
+                }
 
                 is BaseContract.BaseState.OnError -> {
                     ErrorView(errorMessage = errorViewMapper(targetState.errors))
                 }
 
-                BaseContract.BaseState.OnSuccess -> content()
+                BaseContract.BaseState.OnSuccess -> {
+                    content()
+                }
             }
         }
     }

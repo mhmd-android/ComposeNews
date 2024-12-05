@@ -5,8 +5,8 @@ import androidx.startup.Initializer
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import androidx.work.WorkManagerInitializer
+import ir.composenews.sync.SYNC_WORK_NAME
 import ir.composenews.sync.Sync
-import ir.composenews.sync.SyncWorkName
 import ir.composenews.sync.worker.SyncWorker
 
 class SyncInitializer : Initializer<Sync> {
@@ -14,7 +14,7 @@ class SyncInitializer : Initializer<Sync> {
         WorkManager.getInstance(context).apply {
             // Run sync on app startup and ensure only one sync worker runs at any time
             enqueueUniqueWork(
-                SyncWorkName,
+                SYNC_WORK_NAME,
                 ExistingWorkPolicy.KEEP,
                 SyncWorker.startUpSyncWork(),
             )

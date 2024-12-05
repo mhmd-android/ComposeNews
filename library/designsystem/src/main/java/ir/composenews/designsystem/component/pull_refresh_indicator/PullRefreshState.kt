@@ -101,7 +101,7 @@ class PullRefreshState internal constructor(
     internal val position get() = _position
     internal val threshold get() = _threshold
 
-    private val adjustedDistancePulled by derivedStateOf { distancePulled * DragMultiplier }
+    private val adjustedDistancePulled by derivedStateOf { distancePulled * DRAG_MULTIPLIER }
 
     private var _refreshing by mutableStateOf(false)
     private var _position by mutableStateOf(0f)
@@ -173,16 +173,13 @@ class PullRefreshState internal constructor(
     }
 
     private fun calculateIndicatorPosition(): Float = when {
-        // If drag hasn't gone past the threshold, the position is the adjustedDistancePulled.
-        adjustedDistancePulled <= threshold -> adjustedDistancePulled
+        adjustedDistancePulled <= threshold -> {
+            adjustedDistancePulled
+        }
         else -> {
-            // How far beyond the threshold pull has gone, as a percentage of the threshold.
             val overshootPercent = abs(progress) - 1.0f
-            // Limit the overshoot to 200%. Linear between 0 and 200.
             val linearTension = overshootPercent.coerceIn(0f, 2f)
-            // Non-linear tension. Increases with linearTension, but at a decreasing rate.
             val tensionPercent = linearTension - linearTension.pow(2) / 4
-            // The additional offset beyond the threshold.
             val extraOffset = threshold * tensionPercent
             threshold + extraOffset
         }
@@ -211,4 +208,4 @@ object PullRefreshDefaults {
  * the refresh threshold, it is the indicator position, otherwise the indicator position is
  * derived from the progress).
  */
-private const val DragMultiplier = 0.5f
+private const val DRAG_MULTIPLIER = 0.5f
