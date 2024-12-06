@@ -20,3 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontwarn reactor.blockhound.integration.BlockHoundIntegration
+-dontwarn java.sql.JDBCType
