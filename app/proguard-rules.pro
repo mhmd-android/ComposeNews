@@ -66,9 +66,6 @@
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt
 
--keep class ir.composenews.db.** { *; }
--keep interface ir.composenews.db.** { *; }
-
 -keep class io.kotest.** { *; }
 -dontwarn io.kotest.**
 -keep class kotlinx.coroutines.test.** { *; }
@@ -78,3 +75,4 @@
 -dontwarn reactor.blockhound.**
 
 -dontwarn reactor.blockhound.**
+-dontwarn java.sql.JDBCType
