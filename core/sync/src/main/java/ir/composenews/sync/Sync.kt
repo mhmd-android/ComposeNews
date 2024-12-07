@@ -17,9 +17,9 @@ object Sync {
         .initializeComponent(SyncInitializer::class.java)
 }
 
-internal const val SyncWorkName = "SyncWorkName"
-private const val SyncNotificationId = 0
-private const val SyncNotificationChannelID = "SyncNotificationChannel"
+internal const val SYNC_WORK_NAME = "SyncWorkName"
+private const val SYNC_NOTIFICATION_ID = 0
+private const val SYNC_NOTIFICATION_CHANNEL_ID = "SyncNotificationChannel"
 
 val SyncConstraints = Constraints.Builder()
     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -31,7 +31,7 @@ val SyncConstraints = Constraints.Builder()
  * run with a foreground service
  */
 fun Context.syncForegroundInfo() = ForegroundInfo(
-    SyncNotificationId,
+    SYNC_NOTIFICATION_ID,
     syncWorkNotification(),
 )
 
@@ -42,7 +42,7 @@ fun Context.syncForegroundInfo() = ForegroundInfo(
 private fun Context.syncWorkNotification(): Notification {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val channel = NotificationChannel(
-            SyncNotificationChannelID,
+            SYNC_NOTIFICATION_CHANNEL_ID,
             "sync",
             NotificationManager.IMPORTANCE_DEFAULT,
         ).apply {
@@ -57,7 +57,7 @@ private fun Context.syncWorkNotification(): Notification {
 
     // TODO
     return NotificationCompat
-        .Builder(this, SyncNotificationChannelID)
+        .Builder(this, SYNC_NOTIFICATION_CHANNEL_ID)
 //        .setSmallIcon(androidx.hilt.work.R.drawable.notification_action_background)
         .setContentTitle("Background tasks for Compose News")
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)

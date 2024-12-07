@@ -68,15 +68,15 @@ fun PullRefreshIndicator(
 
     Surface(
         modifier = modifier
-            .size(IndicatorSize)
+            .size(INDICATOR_SIZE)
             .pullRefreshIndicatorTransform(state, scale),
-        shape = SpinnerShape,
+        shape = SPINNER_SHAPE,
         color = backgroundColor,
         shadowElevation = if (showElevation) Elevation else 0.dp,
     ) {
         Crossfade(
             targetState = refreshing,
-            animationSpec = tween(durationMillis = CrossfadeDurationMs),
+            animationSpec = tween(durationMillis = CROSS_FADE_DURATION_MS),
             label = "",
         ) { refreshing ->
             Box(
@@ -112,13 +112,13 @@ private fun CircularArrowIndicator(
 
     val targetAlpha by remember(state) {
         derivedStateOf {
-            if (state.progress >= 1f) MaxAlpha else MinAlpha
+            if (state.progress >= 1f) MAX_ALPHA else MIN_ALPHA
         }
     }
 
     val alphaState = animateFloatAsState(
         targetValue = targetAlpha,
-        animationSpec = AlphaTween,
+        animationSpec = ALPHA_TWEEN,
         label = "",
     )
 
@@ -172,7 +172,7 @@ private fun ArrowValues(progress: Float): ArrowValues {
     val tensionPercent = linearTension - linearTension.pow(2) / 4
 
     // Calculations based on SwipeRefreshLayout specification.
-    val endTrim = adjustedPercent * MaxProgressArc
+    val endTrim = adjustedPercent * MAX_PROGRESS_ARC
     val rotation = (-0.25f + 0.4f * adjustedPercent + tensionPercent) * 0.5f
     val startAngle = rotation * 360
     val endAngle = (rotation + endTrim) * 360
@@ -212,11 +212,11 @@ private fun DrawScope.drawArrow(
     }
 }
 
-private const val CrossfadeDurationMs = 100
-private const val MaxProgressArc = 0.8f
+private const val CROSS_FADE_DURATION_MS = 100
+private const val MAX_PROGRESS_ARC = 0.8f
 
-private val IndicatorSize = 40.dp
-private val SpinnerShape = CircleShape
+private val INDICATOR_SIZE = 40.dp
+private val SPINNER_SHAPE = CircleShape
 private val ArcRadius = 7.5.dp
 private val StrokeWidth = 2.5.dp
 private val ArrowWidth = 10.dp
@@ -224,6 +224,6 @@ private val ArrowHeight = 5.dp
 private val Elevation = 6.dp
 
 // Values taken from SwipeRefreshLayout
-private const val MinAlpha = 0.3f
-private const val MaxAlpha = 1f
-private val AlphaTween = tween<Float>(300, easing = LinearEasing)
+private const val MIN_ALPHA = 0.3f
+private const val MAX_ALPHA = 1f
+private val ALPHA_TWEEN = tween<Float>(300, easing = LinearEasing)

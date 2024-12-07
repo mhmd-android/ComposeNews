@@ -43,6 +43,9 @@ import ir.composenews.marketdetail.formatNumber
 import ir.composenews.marketdetail.preview_provider.MarketDetailStateProvider
 import ir.composenews.uimarket.model.MarketModel
 
+private const val HALF_WIDTH_RATIO = 0.5f
+private const val SMALL_WIDTH_RATIO = 0.2f
+
 @Composable
 fun MarketDetailWearRoute(
     market: MarketModel?,
@@ -182,14 +185,14 @@ fun MarketDetailLoadingView() {
         )
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.5f)
+                .fillMaxWidth(HALF_WIDTH_RATIO)
                 .clip(RoundedCornerShape(4.dp))
                 .height(20.dp)
                 .shimmerEffect(),
         )
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.2f)
+                .fillMaxWidth(SMALL_WIDTH_RATIO)
                 .clip(RoundedCornerShape(4.dp))
                 .height(12.dp)
                 .shimmerEffect(),

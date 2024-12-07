@@ -1,0 +1,2 @@
+-keep class ir.composenews.db.** { *; }
+-keep interface ir.composenews.db.** { *; }
