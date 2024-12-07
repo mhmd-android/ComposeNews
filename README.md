@@ -1,4 +1,4 @@
-# ComposeNews new
+# ComposeNews
 
 ![](asset/header.jpeg)
 
