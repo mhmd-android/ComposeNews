@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import androidx.wear.tooling.preview.devices.WearDevices
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun WearApp() {
         val navController = rememberSwipeDismissableNavController()
-        val state = mainViewModel.state.collectAsState()
+        val state = mainViewModel.state.collectAsStateWithLifecycle()
         ComposeNewsTheme {
             AppScaffold {
                 ScreenScaffold(timeText = { TimeText() }) {

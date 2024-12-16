@@ -2,7 +2,6 @@ package ir.composenews.base
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +23,7 @@ data class StateDispatch<EVENT, STATE>(
 inline fun <reified EVENT, STATE> use(
     viewModel: UnidirectionalViewModel<EVENT, STATE>,
 ): StateDispatch<EVENT, STATE> {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val dispatch: (EVENT) -> Unit = { event ->
         viewModel.event(event)
