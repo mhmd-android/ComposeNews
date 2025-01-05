@@ -1,4 +1,4 @@
-#!/bin/sh
+#!C:/Program\ Files/Git/usr/bin/sh.exe
 
 ######## KTLINT-GRADLE HOOK START ########
 
