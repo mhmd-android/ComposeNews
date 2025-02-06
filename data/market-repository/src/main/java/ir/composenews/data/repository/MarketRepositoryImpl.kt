@@ -4,10 +4,9 @@ package ir.composenews.data.repository
 
 import android.util.Log
 import ir.composenews.data.mapper.toChart
-import ir.composenews.data.mapper.toDetail
 import ir.composenews.data.mapper.toMarket
+import ir.composenews.data.mapper.toMarketDetail
 import ir.composenews.data.mapper.toMarketEntity
-import ir.composenews.data.mapper.toRemoteMarketDto
 import ir.composenews.domain.model.Chart
 import ir.composenews.domain.model.Market
 import ir.composenews.domain.model.MarketDetail
@@ -48,10 +47,10 @@ class MarketRepositoryImpl @Inject constructor(
             1,
             false,
         ).suspendOnSuccess {
-            val toRemoteMarketDto = data.map {
-                it.toRemoteMarketDto()
+            val marketEntityList = data.map { marketResponse ->
+                marketResponse.toMarketEntity()
             }
-            dao.upsertMarket(toRemoteMarketDto)
+            dao.upsertMarket(marketEntityList)
         }.onError {
             Log.d("debug", message)
         }.onException {
@@ -92,7 +91,7 @@ class MarketRepositoryImpl @Inject constructor(
         val detail = api.getMarketDetail(id)
         detail.suspendOnSuccess {
             suspendMap {
-                emit(Resource.Success(data.toDetail()))
+                emit(Resource.Success(data.toMarketDetail()))
             }
         }.suspendOnError {
             suspendMap {

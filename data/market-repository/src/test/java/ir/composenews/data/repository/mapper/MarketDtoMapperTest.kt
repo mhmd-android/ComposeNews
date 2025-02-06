@@ -3,14 +3,14 @@ package ir.composenews.data.repository.mapper
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import ir.composenews.data.mapper.toMarket
-import ir.composenews.data.mapper.toRemoteMarketDto
+import ir.composenews.data.mapper.toMarketEntity
+import ir.composenews.db.MarketEntity
 import ir.composenews.domain.model.Market
-import ir.composenews.localdatasource.dto.RemoteMarketDto
 import ir.composenews.remotedatasource.dto.MarketResponse
 
 class MarketDtoMapperTest : StringSpec({
 
-    "Given valid market response, When converting to remote market dto, Then returns correct dto" {
+    "Given valid market response, When converting to market entity, Then returns correct dto" {
         val marketResponse = MarketResponse(
             id = "bitcoin",
             name = "Bitcoin",
@@ -20,12 +20,12 @@ class MarketDtoMapperTest : StringSpec({
             imageUrl = "https://image.url/bitcoin.png",
         )
 
-        val remoteMarketDto = marketResponse.toRemoteMarketDto()
+        val marketEntity = marketResponse.toMarketEntity()
 
-        remoteMarketDto shouldBeEqual marketResponse
+        marketEntity shouldBeEqual marketResponse
     }
 
-    "Given market response with empty strings and zeros, When converting to remote market dto, Then returns correct dto" {
+    "Given market response with empty strings and zeros, When converting to market entity, Then returns correct dto" {
 
         val marketResponse = MarketResponse(
             id = "",
@@ -36,12 +36,12 @@ class MarketDtoMapperTest : StringSpec({
             imageUrl = "",
         )
 
-        val remoteMarketDto = marketResponse.toRemoteMarketDto()
+        val marketEntity = marketResponse.toMarketEntity()
 
-        remoteMarketDto shouldBeEqual marketResponse
+        marketEntity shouldBeEqual marketResponse
     }
 
-    "Given market response with extreme double values, When converting to remote market dto, Then returns correct dto" {
+    "Given market response with extreme double values, When converting to market entity, Then returns correct dto" {
 
         val marketResponse = MarketResponse(
             id = "extreme",
@@ -52,13 +52,12 @@ class MarketDtoMapperTest : StringSpec({
             imageUrl = "https://image.url/extreme.png",
         )
 
-        val remoteMarketDto = marketResponse.toRemoteMarketDto()
+        val marketEntity = marketResponse.toMarketEntity()
 
-        remoteMarketDto shouldBeEqual marketResponse
+        marketEntity shouldBeEqual marketResponse
     }
 
-    "Given market response with negative values, When converting to remote market dto, Then returns correct market with default isFavorite false" {
-
+    "Given market response with negative values, When converting to market entity, Then returns correct market with default isFavorite false" {
         val marketResponse = MarketResponse(
             id = "negative",
             name = "Negative Market",
@@ -68,9 +67,9 @@ class MarketDtoMapperTest : StringSpec({
             imageUrl = "https://image.url/negative.png",
         )
 
-        val remoteMarketDto = marketResponse.toRemoteMarketDto()
+        val marketEntity = marketResponse.toMarketEntity()
 
-        remoteMarketDto shouldBeEqual marketResponse
+        marketEntity shouldBeEqual marketResponse
     }
 
     "Given valid market response, When converting to market, Then returns correct market with default isFavorite false" {
@@ -136,7 +135,7 @@ class MarketDtoMapperTest : StringSpec({
     }
 })
 
-private infix fun RemoteMarketDto.shouldBeEqual(expected: MarketResponse) {
+private infix fun MarketEntity.shouldBeEqual(expected: MarketResponse) {
     id shouldBe expected.id
     name shouldBe expected.name
     symbol shouldBe expected.symbol

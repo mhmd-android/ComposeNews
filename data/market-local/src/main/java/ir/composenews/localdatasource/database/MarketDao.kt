@@ -1,7 +1,6 @@
 package ir.composenews.localdatasource.database
 
 import ir.composenews.db.MarketEntity
-import ir.composenews.localdatasource.dto.RemoteMarketDto
 import kotlinx.coroutines.flow.Flow
 
 interface MarketDao {
@@ -12,5 +11,5 @@ interface MarketDao {
 
     suspend fun insertMarket(marketEntity: MarketEntity)
 
-    suspend fun upsertMarket(remoteMarketDto: List<RemoteMarketDto>)
+    suspend fun upsertMarket(marketEntity: List<MarketEntity>)
 }
