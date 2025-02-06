@@ -4,7 +4,6 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import ir.composenews.db.MarketDatabase
 import ir.composenews.db.MarketEntity
-import ir.composenews.localdatasource.dto.RemoteMarketDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -35,8 +34,8 @@ class MarketDaoImpl @Inject constructor(
         }
     }
 
-    override suspend fun upsertMarket(remoteMarketDto: List<RemoteMarketDto>) {
-        remoteMarketDto.forEach { market ->
+    override suspend fun upsertMarket(marketEntity: List<MarketEntity>) {
+        marketEntity.forEach { market ->
             market.run {
                 queries.upsertMarket(
                     id = id,

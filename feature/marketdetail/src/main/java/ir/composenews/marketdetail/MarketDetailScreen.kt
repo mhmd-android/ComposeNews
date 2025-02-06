@@ -161,7 +161,7 @@ private fun Rank(marketDetailState: State) {
             style = MaterialTheme.typography.titleMedium,
         )
         Text(
-            text = "#${marketDetailState.marketDetail.marketCapRank}",
+            text = "#${marketDetailState.marketDetail?.marketCapRank}",
             style = MaterialTheme.typography.bodyLarge,
         )
     }
@@ -178,7 +178,7 @@ private fun Low24(marketDetailState: State) {
             style = MaterialTheme.typography.titleMedium,
         )
         Text(
-            text = marketDetailState.marketDetail.marketData?.low24h?.usd.toString(),
+            text = marketDetailState.marketDetail?.marketData?.low24hUSD.toString(),
             style = MaterialTheme.typography.bodyLarge,
         )
     }
@@ -195,7 +195,7 @@ private fun High24(marketDetailState: State) {
             style = MaterialTheme.typography.titleMedium,
         )
         Text(
-            text = marketDetailState.marketDetail.marketData?.high24h?.usd.toString(),
+            text = marketDetailState.marketDetail?.marketData?.high24hUSD.toString(),
             style = MaterialTheme.typography.bodyLarge,
         )
     }
@@ -212,9 +212,7 @@ private fun MarketCap(marketDetailState: State) {
             style = MaterialTheme.typography.titleMedium,
         )
         Text(
-            text = formatNumber(
-                marketDetailState.marketDetail.marketData?.marketCap?.usd,
-            ),
+            text = formatNumber(marketDetailState.marketDetail?.marketData?.marketCapUSD),
             style = MaterialTheme.typography.bodyLarge,
         )
     }

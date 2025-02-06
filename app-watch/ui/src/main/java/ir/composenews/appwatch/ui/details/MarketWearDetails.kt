@@ -123,7 +123,7 @@ private fun MarketDetailScreen(
             HorizontalDivider()
         }
         item {
-            MarketDetail(marketDetailState.marketDetail.marketData)
+            MarketDetail(marketDetailState.marketDetail?.marketData)
         }
     }
 }
@@ -136,18 +136,10 @@ fun MarketDetail(marketData: MarketDetail.MarketData?) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.Start,
         ) {
-            data.marketCap?.let { marketCap ->
-                MarketDetailDataBlock("Market Cap", formatNumber(marketCap.usd))
-            }
-            data.high24h?.let { high24h ->
-                MarketDetailDataBlock("High 24h", high24h.usd.toString())
-            }
-            data.low24h?.let { low24h ->
-                MarketDetailDataBlock("Low 24h", low24h.usd.toString())
-            }
-            data.marketCapRank?.let { marketCapRank ->
-                MarketDetailDataBlock("Rank", "#$marketCapRank")
-            }
+            MarketDetailDataBlock("Market Cap", formatNumber(data.marketCapUSD))
+            MarketDetailDataBlock("High 24h", data.high24hUSD.toString())
+            MarketDetailDataBlock("Low 24h", data.low24hUSD.toString())
+            MarketDetailDataBlock("Rank", "#${data.marketCapRank}")
         }
     }
 }

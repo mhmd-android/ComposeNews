@@ -14,7 +14,7 @@ interface MarketDetailContract :
         val loading: Boolean = true,
         val refreshing: Boolean = false,
         val marketChart: Chart = Chart(persistentListOf()),
-        val marketDetail: MarketDetail = MarketDetail(),
+        val marketDetail: MarketDetail? = null,
     )
 
     sealed class Event {
