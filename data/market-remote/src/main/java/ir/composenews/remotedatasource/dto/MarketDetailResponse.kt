@@ -6,42 +6,42 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MarketDetailResponse(
     @SerialName("id")
-    val id: String? = null,
+    val id: String?,
     @SerialName("market_cap_rank")
-    val marketCapRank: Int? = null,
+    val marketCapRank: Int?,
     @SerialName("market_data")
-    val marketData: MarketData? = null,
+    val marketData: MarketData?,
     @SerialName("name")
-    val name: String? = null,
+    val name: String?,
 ) {
 
     @Serializable
     data class MarketData(
         @SerialName("high_24h")
-        val high24h: High24h? = null,
+        val high24h: High24h?,
         @SerialName("low_24h")
-        val low24h: Low24h? = null,
+        val low24h: Low24h?,
         @SerialName("market_cap")
-        val marketCap: MarketCap? = null,
+        val marketCap: MarketCap?,
         @SerialName("market_cap_rank")
-        val marketCapRank: Int? = null,
+        val marketCapRank: Int?,
     ) {
         @Serializable
         data class High24h(
             @SerialName("usd")
-            val usd: Double? = null,
+            val usd: Double?,
         )
 
         @Serializable
         data class Low24h(
             @SerialName("usd")
-            val usd: Double? = null,
+            val usd: Double?,
         )
 
         @Serializable
         data class MarketCap(
             @SerialName("usd")
-            val usd: Long? = null,
+            val usd: Long?,
         )
     }
 }

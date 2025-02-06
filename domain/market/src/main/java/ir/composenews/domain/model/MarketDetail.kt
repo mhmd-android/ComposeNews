@@ -5,32 +5,16 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MarketDetail(
-    val id: String? = null,
-    val marketCapRank: Int? = null,
-    val marketData: MarketData? = null,
-    val name: String? = null,
+    val id: String,
+    val marketCapRank: Int,
+    val marketData: MarketData?,
+    val name: String,
 ) : Parcelable {
-
     @Parcelize
     data class MarketData(
-        val high24h: High24h? = null,
-        val low24h: Low24h? = null,
-        val marketCap: MarketCap? = null,
-        val marketCapRank: Int? = null,
-    ) : Parcelable {
-        @Parcelize
-        data class High24h(
-            val usd: Double? = null,
-        ) : Parcelable
-
-        @Parcelize
-        data class Low24h(
-            val usd: Double? = null,
-        ) : Parcelable
-
-        @Parcelize
-        data class MarketCap(
-            val usd: Long? = null,
-        ) : Parcelable
-    }
+        val high24hUSD: Double,
+        val low24hUSD: Double,
+        val marketCapUSD: Long,
+        val marketCapRank: Int,
+    ) : Parcelable
 }
