@@ -5,5 +5,5 @@ import ir.composenews.remotedatasource.dto.MarketChartResponse
 import kotlinx.collections.immutable.toPersistentList
 
 fun MarketChartResponse.toChart(): Chart = Chart(
-    prices = prices.map { pair -> Pair(pair[0].toInt(), pair[1]) }.toPersistentList(),
+    prices = prices.map { element -> Pair(element[0].toLong(), element[1]) }.toPersistentList(),
 )
