@@ -1,11 +1,7 @@
-@file:Suppress("ImportOrdering")
-
-package ir.composenews.data.repository.mapper
+package ir.composenews.data.mapper
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import ir.composenews.data.mapper.toMarket
-import ir.composenews.data.mapper.toMarketEntity
 import ir.composenews.db.MarketEntity
 import ir.composenews.domain.model.Market
 import ir.composenews.localdatasource.database.FALSE
