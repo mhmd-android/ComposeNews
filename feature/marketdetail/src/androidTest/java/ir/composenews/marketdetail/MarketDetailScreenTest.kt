@@ -6,8 +6,8 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import ir.composenews.core_test.dispatcher.DispatcherProvider
-import ir.composenews.domain.model.Chart
 import ir.composenews.domain.model.Market
+import ir.composenews.domain.model.MarketChart
 import ir.composenews.domain.model.MarketDetail
 import ir.composenews.domain.repository.MarketRepository
 import ir.composenews.domain.use_case.GetMarketChartUseCase
@@ -46,7 +46,7 @@ class MarketDetailScreenTest {
                 TODO("Not yet implemented")
             }
 
-            override fun fetchChart(id: String): Flow<Resource<Chart, Errors>> {
+            override fun fetchChart(id: String): Flow<Resource<MarketChart, Errors>> {
                 TODO("Not yet implemented")
             }
 
@@ -56,10 +56,10 @@ class MarketDetailScreenTest {
         }
 
     private fun createMockViewModel(): MarketDetailViewModel {
-        val fakeGetMarketChartUseCase =
+        val fakeGetMarketMarketChartUseCase =
             object : GetMarketChartUseCase(fakeMarketRepository) {
-                override fun invoke(id: String): Flow<Resource<Chart, Errors>> {
-                    return flowOf(Resource.Success(Chart(persistentListOf(Pair(0, 50000.0)))))
+                override fun invoke(id: String): Flow<Resource<MarketChart, Errors>> {
+                    return flowOf(Resource.Success(MarketChart(persistentListOf(Pair(0, 50000.0)))))
                 }
             }
 
@@ -80,7 +80,7 @@ class MarketDetailScreenTest {
         val fakeDispatcherProvider = FakeDispatcherProvider()
 
         return MarketDetailViewModel(
-            getMarketChartUseCase = fakeGetMarketChartUseCase,
+            getMarketChartUseCase = fakeGetMarketMarketChartUseCase,
             getMarketDetailUseCase = fakeGetMarketDetailUseCase,
             toggleFavoriteMarketListUseCase = fakeToggleFavoriteMarketListUseCase,
             dispatcherProvider = fakeDispatcherProvider,
