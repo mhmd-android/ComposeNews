@@ -59,8 +59,8 @@ class MarketRepositoryImpl @Inject constructor(
     }
 
     override suspend fun toggleFavoriteMarket(oldMarket: Market) {
-        val news = oldMarket.copy(isFavorite = !oldMarket.isFavorite).toMarketEntity()
-        dao.insertMarket(news)
+        val marketEntity = oldMarket.copy(isFavorite = !oldMarket.isFavorite).toMarketEntity()
+        dao.insertMarket(marketEntity)
     }
 
     override fun fetchChart(id: String): Flow<Resource<MarketChart, Errors>> = flow {
@@ -81,9 +81,7 @@ class MarketRepositoryImpl @Inject constructor(
                 )
             }
         }.suspendOnException {
-            suspendMap {
-                emit(Resource.Error(Errors.ExceptionError(it.message, throwable)))
-            }
+            suspendMap { emit(Resource.Error(Errors.ExceptionError(it.message, throwable))) }
         }
     }
 
@@ -97,19 +95,12 @@ class MarketRepositoryImpl @Inject constructor(
             suspendMap {
                 emit(
                     Resource.Error(
-                        Errors.ApiError(
-                            it.statusCode.mapMessageStatusCode(),
-                            it.statusCode.code,
-                        ),
+                        Errors.ApiError(it.statusCode.mapMessageStatusCode(), it.statusCode.code),
                     ),
                 )
             }
         }.suspendOnException {
-            suspendMap {
-                emit(
-                    Resource.Error(Errors.ExceptionError(it.message, it.throwable)),
-                )
-            }
+            suspendMap { emit(Resource.Error(Errors.ExceptionError(it.message, it.throwable))) }
         }
     }
 }
