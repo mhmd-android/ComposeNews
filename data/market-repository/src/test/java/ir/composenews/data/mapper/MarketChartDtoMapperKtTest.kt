@@ -3,8 +3,8 @@ package ir.composenews.data.mapper
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import ir.composenews.domain.model.MarketChart
 import ir.composenews.remotedatasource.dto.MarketChartResponse
 
 class MarketChartDtoMapperKtTest : StringSpec({
@@ -16,25 +16,20 @@ class MarketChartDtoMapperKtTest : StringSpec({
             ),
         )
 
-        val chart = marketChartResponse.toChart()
-        val expected = listOf(
-            -1700000005000 to 45000.0,
-            1700000005000 to 46000.5,
-        )
+        val marketChart = marketChartResponse.toMarketChart()
 
-        chart.prices shouldContainExactly expected
+        marketChart shouldContainExactly marketChartResponse
     }
 
     "Given market chart response with empty prices, When converting to chart, Then returns empty chart" {
         val marketChartResponse = MarketChartResponse(prices = emptyList())
 
-        val chart = marketChartResponse.toChart()
+        val marketChart = marketChartResponse.toMarketChart()
 
-        chart.prices.shouldBeEmpty()
+        marketChart.prices.shouldBeEmpty()
     }
 
     "Given market chart response with negative timestamps, When converting to chart, Then returns correctly mapped chart" {
-
         val marketChartResponse = MarketChartResponse(
             prices = listOf(
                 listOf(-1000.0, 45000.0),
@@ -42,12 +37,9 @@ class MarketChartDtoMapperKtTest : StringSpec({
             ),
         )
 
-        val chart = marketChartResponse.toChart()
+        val marketChart = marketChartResponse.toMarketChart()
 
-        chart.prices.zip(marketChartResponse.prices).forEach { (actual, expected) ->
-            actual.first shouldBe expected[0].toLong()
-            actual.second shouldBe expected[1]
-        }
+        marketChart shouldContainExactly marketChartResponse
     }
 
     "Given market chart response with negative prices, When converting to chart, Then returns correctly mapped chart" {
@@ -58,13 +50,9 @@ class MarketChartDtoMapperKtTest : StringSpec({
             ),
         )
 
-        val chart = marketChartResponse.toChart()
-        val expected = listOf(
-            1700000000000 to -45000.0,
-            1700000005000 to -46000.5,
-        )
+        val marketChart = marketChartResponse.toMarketChart()
 
-        chart.prices shouldContainExactly expected
+        marketChart shouldContainExactly marketChartResponse
     }
 
     "Given market chart response with zero values, When converting to chart, Then returns correctly mapped chart" {
@@ -75,13 +63,9 @@ class MarketChartDtoMapperKtTest : StringSpec({
             ),
         )
 
-        val chart = marketChartResponse.toChart()
-        val expected = listOf(
-            0L to 0.0,
-            0L to 0.0,
-        )
+        val marketChart = marketChartResponse.toMarketChart()
 
-        chart.prices shouldContainExactly expected
+        marketChart shouldContainExactly marketChartResponse
     }
 
     "Given market chart response with large double values, When converting to chart, Then returns correctly mapped chart" {
@@ -92,13 +76,9 @@ class MarketChartDtoMapperKtTest : StringSpec({
             ),
         )
 
-        val chart = marketChartResponse.toChart()
-        val expected = listOf(
-            Double.MAX_VALUE.toLong() to Double.MAX_VALUE,
-            Double.MIN_VALUE.toLong() to Double.MIN_VALUE,
-        )
+        val marketChart = marketChartResponse.toMarketChart()
 
-        chart.prices shouldContainExactly expected
+        marketChart shouldContainExactly marketChartResponse
     }
 
     "Given market chart response with non-integer timestamps, When converting to chart, Then truncates decimals" {
@@ -109,13 +89,9 @@ class MarketChartDtoMapperKtTest : StringSpec({
             ),
         )
 
-        val chart = marketChartResponse.toChart()
-        val expected = listOf(
-            1700000000000 to 45000.55,
-            1700000005000 to 46000.99,
-        )
+        val marketChart = marketChartResponse.toMarketChart()
 
-        chart.prices shouldContainExactly expected
+        marketChart shouldContainExactly marketChartResponse
     }
 
     "Given market chart response with missing second element in price pair, When converting to chart, Then throws IndexOutOfBoundsException" {
@@ -126,7 +102,7 @@ class MarketChartDtoMapperKtTest : StringSpec({
         )
 
         shouldThrow<IndexOutOfBoundsException> {
-            marketChartResponse.toChart()
+            marketChartResponse.toMarketChart()
         }
     }
 
@@ -138,7 +114,15 @@ class MarketChartDtoMapperKtTest : StringSpec({
         )
 
         shouldThrow<IndexOutOfBoundsException> {
-            marketChartResponse.toChart()
+            marketChartResponse.toMarketChart()
         }
     }
 })
+
+private infix fun MarketChart.shouldContainExactly(expected: MarketChartResponse) {
+    prices.zip(expected.prices).forEach { (actual, expected) ->
+        if (expected.size < 2) throw IndexOutOfBoundsException()
+        actual.first shouldBe expected[0].toLong()
+        actual.second shouldBe expected[1]
+    }
+}
