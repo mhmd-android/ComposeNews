@@ -121,7 +121,7 @@ class MarketChartDtoMapperKtTest : StringSpec({
 
 private infix fun MarketChart.shouldContainExactly(expected: MarketChartResponse) {
     prices.zip(expected.prices).forEach { (actual, expected) ->
-        if (expected.size < 2) throw IndexOutOfBoundsException()
+        expected.size shouldBe 2
         actual.first shouldBe expected[0].toLong()
         actual.second shouldBe expected[1]
     }
