@@ -9,7 +9,7 @@ import io.mockk.mockk
 import ir.composenews.base.BaseContract
 import ir.composenews.core_test.MainCoroutineListener
 import ir.composenews.core_test.dispatcher.TestDispatcherProvider
-import ir.composenews.domain.model.Chart
+import ir.composenews.domain.model.MarketChart
 import ir.composenews.domain.use_case.GetMarketChartUseCase
 import ir.composenews.domain.use_case.GetMarketDetailUseCase
 import ir.composenews.domain.use_case.ToggleFavoriteMarketListUseCase
@@ -143,6 +143,6 @@ private fun provideFakeMarket(isFavorite: Boolean = false): MarketModel {
     )
 }
 
-private fun provideFakeChart(): Chart {
-    return Chart(persistentListOf())
+private fun provideFakeChart(): MarketChart {
+    return MarketChart(persistentListOf())
 }

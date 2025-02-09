@@ -3,12 +3,12 @@
 package ir.composenews.data.repository
 
 import android.util.Log
-import ir.composenews.data.mapper.toChart
 import ir.composenews.data.mapper.toMarket
+import ir.composenews.data.mapper.toMarketChart
 import ir.composenews.data.mapper.toMarketDetail
 import ir.composenews.data.mapper.toMarketEntity
-import ir.composenews.domain.model.Chart
 import ir.composenews.domain.model.Market
+import ir.composenews.domain.model.MarketChart
 import ir.composenews.domain.model.MarketDetail
 import ir.composenews.domain.repository.MarketRepository
 import ir.composenews.localdatasource.database.MarketDao
@@ -59,15 +59,15 @@ class MarketRepositoryImpl @Inject constructor(
     }
 
     override suspend fun toggleFavoriteMarket(oldMarket: Market) {
-        val news = oldMarket.copy(isFavorite = !oldMarket.isFavorite).toMarketEntity()
-        dao.insertMarket(news)
+        val marketEntity = oldMarket.copy(isFavorite = !oldMarket.isFavorite).toMarketEntity()
+        dao.insertMarket(marketEntity)
     }
 
-    override fun fetchChart(id: String): Flow<Resource<Chart, Errors>> = flow {
+    override fun fetchChart(id: String): Flow<Resource<MarketChart, Errors>> = flow {
         val chart = api.getMarketChart(id, "usd", 1)
         chart.suspendOnSuccess {
             suspendMap {
-                emit(Resource.Success(it.data.toChart()))
+                emit(Resource.Success(it.data.toMarketChart()))
             }
         }.suspendOnError {
             suspendMap {
@@ -81,9 +81,7 @@ class MarketRepositoryImpl @Inject constructor(
                 )
             }
         }.suspendOnException {
-            suspendMap {
-                emit(Resource.Error(Errors.ExceptionError(it.message, throwable)))
-            }
+            suspendMap { emit(Resource.Error(Errors.ExceptionError(it.message, throwable))) }
         }
     }
 
@@ -97,19 +95,12 @@ class MarketRepositoryImpl @Inject constructor(
             suspendMap {
                 emit(
                     Resource.Error(
-                        Errors.ApiError(
-                            it.statusCode.mapMessageStatusCode(),
-                            it.statusCode.code,
-                        ),
+                        Errors.ApiError(it.statusCode.mapMessageStatusCode(), it.statusCode.code),
                     ),
                 )
             }
         }.suspendOnException {
-            suspendMap {
-                emit(
-                    Resource.Error(Errors.ExceptionError(it.message, it.throwable)),
-                )
-            }
+            suspendMap { emit(Resource.Error(Errors.ExceptionError(it.message, it.throwable))) }
         }
     }
 }

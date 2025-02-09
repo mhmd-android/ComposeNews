@@ -1,7 +1,7 @@
 package ir.composenews.marketdetail
 
 import ir.composenews.base.UnidirectionalViewModel
-import ir.composenews.domain.model.Chart
+import ir.composenews.domain.model.MarketChart
 import ir.composenews.domain.model.MarketDetail
 import ir.composenews.uimarket.model.MarketModel
 import kotlinx.collections.immutable.persistentListOf
@@ -13,7 +13,7 @@ interface MarketDetailContract :
         val market: MarketModel? = null,
         val loading: Boolean = true,
         val refreshing: Boolean = false,
-        val marketChart: Chart = Chart(persistentListOf()),
+        val marketChart: MarketChart = MarketChart(persistentListOf()),
         val marketDetail: MarketDetail? = null,
     )
 

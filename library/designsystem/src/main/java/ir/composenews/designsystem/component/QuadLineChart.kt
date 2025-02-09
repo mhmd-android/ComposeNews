@@ -40,7 +40,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun QuadLineChart(
-    data: List<Pair<Int, Double>>,
+    data: List<Pair<Long, Double>>,
 ) {
     val spacing =
         dimensionResource(R.dimen.quad_line_chart_spacing).value // Reduced spacing to minimize horizontal padding
