@@ -10,6 +10,4 @@ interface MarketDao {
     fun getFavoriteMarketList(): Flow<List<MarketEntity>>
 
     suspend fun insertMarket(marketEntity: MarketEntity)
-
-    suspend fun upsertMarket(marketEntity: List<MarketEntity>)
 }

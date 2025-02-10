@@ -23,8 +23,3 @@ insertMarket:
 INSERT OR REPLACE
 INTO marketEntity(id, name, symbol, currentPrice, priceChangePercentage24h, imageUrl, isFavorite)
 VALUES (:id, :name, :symbol, :currentPrice, :priceChangePercentage24h, :imageUrl, :isFavorite);
-
-upsertMarket:
-INSERT OR REPLACE
-INTO marketEntity (id, name, symbol, currentPrice, priceChangePercentage24h, imageUrl)
-VALUES (:id, :name, :symbol, :currentPrice, :priceChangePercentage24h, :imageUrl);
