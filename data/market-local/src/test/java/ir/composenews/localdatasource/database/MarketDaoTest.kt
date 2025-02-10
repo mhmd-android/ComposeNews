@@ -1,3 +1,5 @@
+@file:Suppress("MaxLineLength")
+
 package ir.composenews.localdatasource.database
 
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
@@ -37,6 +39,8 @@ class MarketDaoTest : SuspendSpec({
     "Given a list of market entities, When updating the value of Market, Then inserts or updates entities in the database" {
         val marketEntity = MarketEntity("1", "Bitcoin", "BTC", 50000.0, 5.0, "url", FALSE)
         marketDao.insertMarket(marketEntity = marketEntity)
+
+        marketDao.getMarketList().first().shouldContainExactly(marketEntity)
 
         val updatedMarket =
             marketEntity.copy(currentPrice = 50001.0, priceChangePercentage24h = 5.000001)

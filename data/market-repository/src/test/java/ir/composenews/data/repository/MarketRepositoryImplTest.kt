@@ -1,3 +1,5 @@
+@file:Suppress("MaxLineLength")
+
 package ir.composenews.data.repository
 
 import io.kotest.core.spec.style.StringSpec
