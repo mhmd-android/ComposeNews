@@ -63,18 +63,18 @@ class MarketRepositoryImplTest : StringSpec({
     }
 
     "Given API provides market data, When SyncMarketList is called, Then updates database with market data" {
-        val marketResponses = listOf(MarketResponse("1", "Bitcoin", "BTC", 50000.0, 5.0, "url"))
-        val marketEntities = marketResponses.map { it.toMarketEntity() }
+        val marketResponses = MarketResponse("1", "Bitcoin", "BTC", 50000.0, 5.0, "url")
+        val marketEntities = marketResponses.toMarketEntity()
         coEvery { api.getMarkets(any(), any(), any(), any(), any()) } returns ApiResponse.Success(
-            marketResponses,
+            listOf(marketResponses),
         )
-        coEvery { marketDao.upsertMarket(marketEntities) } just Runs
+        coEvery { marketDao.insertMarket(marketEntities) } just Runs
 
         repository.syncMarketList()
 
         coVerify(ordering = Ordering.SEQUENCE) {
             api.getMarkets(any(), any(), any(), any(), any())
-            marketDao.upsertMarket(marketEntities)
+            marketDao.insertMarket(marketEntities)
         }
     }
 
@@ -85,7 +85,7 @@ class MarketRepositoryImplTest : StringSpec({
 
         repository.syncMarketList()
 
-        coVerify(exactly = 0) { marketDao.upsertMarket(any()) }
+        coVerify(exactly = 0) { marketDao.insertMarket(any()) }
     }
 
     "Given an existing market, When ToggleFavoriteMarket is called, Then updates market favorite status" {
@@ -115,7 +115,9 @@ class MarketRepositoryImplTest : StringSpec({
     }
 
     "Given API call fails, When FetchChart is called, Then returns error resource" {
-        coEvery { api.getMarketChart("1", "usd", 1) } returns ApiResponse.Failure.Exception(IOException())
+        coEvery { api.getMarketChart("1", "usd", 1) } returns ApiResponse.Failure.Exception(
+            IOException(),
+        )
 
         val actualMarkets = repository.fetchChart("1").first()
 
