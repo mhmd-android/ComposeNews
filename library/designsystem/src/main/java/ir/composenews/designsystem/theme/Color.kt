@@ -1,4 +1,4 @@
-@file:Suppress("NoConsecutiveBlankLines")
+@file:Suppress("NoConsecutiveBlankLines", "MagicNumber")
 
 package ir.composenews.designsystem.theme
 

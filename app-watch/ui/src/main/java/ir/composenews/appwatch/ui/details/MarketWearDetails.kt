@@ -1,3 +1,5 @@
+@file:Suppress("UnusedPrivateMember")
+
 package ir.composenews.appwatch.ui.details
 
 import androidx.compose.foundation.Image

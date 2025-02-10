@@ -1,4 +1,4 @@
-@file:Suppress("TooGenericExceptionCaught", "ThrowingExceptionsWithoutMessageOrCause")
+@file:Suppress("TooGenericExceptionCaught", "ThrowingExceptionsWithoutMessageOrCause", "MagicNumber")
 
 package ir.composenews.network
 

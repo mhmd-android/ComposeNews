@@ -1,3 +1,5 @@
+@file:Suppress("MaxLineLength")
+
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {

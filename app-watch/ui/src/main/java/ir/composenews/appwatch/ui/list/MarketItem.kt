@@ -1,4 +1,4 @@
-@file:Suppress("MagicNumber", "MaxLineLength", "LongMethod")
+@file:Suppress("MagicNumber", "MaxLineLength", "LongMethod", "LongParameterList", "UnusedPrivateMember")
 
 package ir.composenews.appwatch.ui.list
 
