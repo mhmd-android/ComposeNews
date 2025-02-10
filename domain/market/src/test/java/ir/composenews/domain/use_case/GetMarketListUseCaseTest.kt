@@ -3,34 +3,28 @@
 package ir.composenews.domain.use_case
 
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.ints.shouldBeExactly
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
 import ir.composenews.domain.repository.MarketRepository
-import ir.composenews.domain.test.favoriteMarket
-import ir.composenews.domain.test.notFavoriteMarket
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.runTest
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 
 class GetMarketListUseCaseTest : StringSpec({
 
-    lateinit var mockRepository: MarketRepository
-    lateinit var getMarketListUseCase: GetMarketListUseCase
+    lateinit var repository: MarketRepository
+    lateinit var useCase: GetMarketListUseCase
 
-    beforeSpec {
-        mockRepository = mock {
-            on { getMarketList() } doReturn flow {
-                emit(listOf(favoriteMarket, notFavoriteMarket))
-            }
-        }
-        getMarketListUseCase = GetMarketListUseCase(repository = mockRepository)
+    beforeTest {
+        repository = mockk(relaxed = true)
+        useCase = GetMarketListUseCase(repository = repository)
     }
 
-    "Get market list" {
-        runTest {
-            val markets = getMarketListUseCase().first()
-            markets.size shouldBeExactly 2
-        }
+    "Given repository syncs market data, When invoked, Then syncMarketList is called" {
+        coEvery { repository.syncMarketList() } just Runs
+
+        useCase.invoke()
+
+        coVerify { repository.syncMarketList() }
     }
 })

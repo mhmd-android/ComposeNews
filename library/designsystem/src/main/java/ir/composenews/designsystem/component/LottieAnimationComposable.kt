@@ -1,3 +1,5 @@
+@file:Suppress("LongParameterList")
+
 package ir.composenews.designsystem.component
 
 import androidx.compose.runtime.Composable

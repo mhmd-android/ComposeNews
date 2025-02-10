@@ -50,7 +50,9 @@ class MarketRepositoryImpl @Inject constructor(
             val marketEntityList = data.map { marketResponse ->
                 marketResponse.toMarketEntity()
             }
-            dao.upsertMarket(marketEntityList)
+            marketEntityList.forEach { marketEntity ->
+                dao.insertMarket(marketEntity = marketEntity)
+            }
         }.onError {
             Log.d("debug", message)
         }.onException {

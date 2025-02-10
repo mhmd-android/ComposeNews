@@ -1,4 +1,4 @@
-@file:Suppress("MaxLineLength", "ComplexCondition", "ktlint:standard:function-naming")
+@file:Suppress("MaxLineLength", "ComplexCondition", "ktlint:standard:function-naming", "UnusedPrivateMember")
 
 package ir.composenews.marketlist
 

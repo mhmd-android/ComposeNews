@@ -1,4 +1,4 @@
-@file:Suppress("MagicNumber")
+@file:Suppress("MagicNumber", "UnusedPrivateMember")
 
 package ir.composenews.designsystem.component
 

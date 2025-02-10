@@ -1,3 +1,5 @@
+@file:Suppress("UnusedPrivateMember")
+
 package ir.composenews.marketdetail
 
 import androidx.compose.foundation.Image

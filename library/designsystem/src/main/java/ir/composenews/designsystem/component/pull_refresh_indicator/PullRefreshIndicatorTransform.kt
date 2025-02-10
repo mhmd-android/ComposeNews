@@ -1,4 +1,4 @@
-@file:Suppress("MagicNumber", "PackageNaming", "PackageName")
+@file:Suppress("MagicNumber", "PackageNaming", "PackageName", "ForbiddenComment")
 
 package ir.composenews.designsystem.component.pull_refresh_indicator
 

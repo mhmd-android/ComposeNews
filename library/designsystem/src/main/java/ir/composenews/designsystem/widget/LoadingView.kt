@@ -1,3 +1,5 @@
+@file:Suppress("UnusedPrivateMember")
+
 package ir.composenews.designsystem.widget
 
 import androidx.compose.foundation.layout.Box

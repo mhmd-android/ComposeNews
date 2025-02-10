@@ -9,5 +9,5 @@ import javax.inject.Inject
 open class ToggleFavoriteMarketListUseCase @Inject constructor(
     private val repository: MarketRepository,
 ) {
-    open suspend operator fun invoke(news: Market) = repository.toggleFavoriteMarket(news)
+    open suspend operator fun invoke(market: Market) = repository.toggleFavoriteMarket(market)
 }
