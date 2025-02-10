@@ -33,19 +33,4 @@ class MarketDaoImpl @Inject constructor(
             )
         }
     }
-
-    override suspend fun upsertMarket(marketEntity: List<MarketEntity>) {
-        marketEntity.forEach { market ->
-            market.run {
-                queries.upsertMarket(
-                    id = id,
-                    name = name,
-                    symbol = symbol,
-                    currentPrice = currentPrice,
-                    priceChangePercentage24h = priceChangePercentage24h,
-                    imageUrl = imageUrl,
-                )
-            }
-        }
-    }
 }
