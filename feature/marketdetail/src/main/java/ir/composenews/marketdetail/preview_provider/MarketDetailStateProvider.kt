@@ -3,6 +3,7 @@
 package ir.composenews.marketdetail.preview_provider
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import ir.composenews.base.LoadableData
 import ir.composenews.domain.model_provider.marketList
 import ir.composenews.marketdetail.MarketDetailContract
 import ir.composenews.uimarket.mapper.toMarketModel
@@ -10,7 +11,7 @@ import ir.composenews.uimarket.mapper.toMarketModel
 class MarketDetailStateProvider : PreviewParameterProvider<MarketDetailContract.State> {
     override val values: Sequence<MarketDetailContract.State> = sequenceOf(
         MarketDetailContract.State(
-            marketList[0].toMarketModel(),
+            LoadableData.Loaded(data = marketList[0].toMarketModel()),
         ),
     )
 }

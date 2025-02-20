@@ -1,8 +1,13 @@
 package ir.composenews.marketlist
 
+import app.cash.turbine.test
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.equals.shouldBeEqual
+import io.kotest.matchers.shouldBe
+import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
 import io.mockk.mockk
 import ir.composenews.core_test.MainCoroutineListener
 import ir.composenews.core_test.dispatcher.TestDispatcherProvider
@@ -10,7 +15,13 @@ import ir.composenews.domain.model.Market
 import ir.composenews.domain.use_case.GetFavoriteMarketListUseCase
 import ir.composenews.domain.use_case.GetMarketListUseCase
 import ir.composenews.domain.use_case.ToggleFavoriteMarketListUseCase
+import ir.composenews.network.Errors
 import ir.composenews.uimarket.mapper.toMarket
+import ir.composenews.uimarket.mapper.toMarketModel
+import ir.composenews.uimarket.model.MarketModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -29,12 +40,91 @@ class MarketListViewModelTest : StringSpec({
 
     listeners(MainCoroutineListener())
 
-    beforeSpec {
+    beforeAny {
         viewModel = MarketListViewModel(
             getMarketListUseCase,
             getFavoriteMarketListUseCase,
             toggleFavoriteMarketListUseCase,
             dispatcherProvider,
+        )
+    }
+
+    "Given initial state, When ViewModel is created, Then state should be default" {
+        viewModel.state.value shouldBe MarketListContract.State(
+            marketList = persistentListOf(),
+            refreshing = false,
+            showFavoriteList = false,
+            showFavoriteEmptyState = false,
+        )
+    }
+
+    "Given show favorite list is false, When OnGetMarketList is triggered, Then calls getMarketListUseCase" {
+
+        viewModel.baseState.test {
+            val initState = awaitItem()
+            initState shouldBe BaseContract.BaseState.OnLoading
+            val afterState = awaitItem()
+            afterState shouldBe BaseContract.BaseState.OnSuccess
+        }
+
+        viewModel.state.test {
+            val initState = awaitItem()
+            initState shouldBe MarketListContract.State(refreshing = false)
+
+            viewModel.event(MarketListContract.Event.OnGetMarketList)
+
+            val loadingState = awaitItem()
+            loadingState shouldBe MarketListContract.State(refreshing = true)
+            val afterState = awaitItem()
+            afterState shouldBe MarketListContract.State(refreshing = false)
+        }
+
+        coVerify { getMarketListUseCase.invoke() }
+    }
+
+    "Given show favorite list is true, When OnGetMarketList is triggered, Then calls getFavoriteMarketListUseCase" {
+        coEvery { getFavoriteMarketListUseCase.invoke() } returns flowOf(emptyList())
+        viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(showFavoriteList = true))
+
+        viewModel.event(MarketListContract.Event.OnGetMarketList)
+
+        coVerify { getFavoriteMarketListUseCase.invoke() }
+    }
+
+    "Given market list fetch succeeds, When OnGetMarketList is triggered, Then updates state with market list" {
+        val marketList = provideMarketList(2)
+        coEvery { getMarketListUseCase.invoke() } returns flowOf(marketList)
+
+        viewModel.event(MarketListContract.Event.OnGetMarketList)
+
+        viewModel.state.value.marketList shouldBe marketList.map { it.toMarketModel() }
+            .toPersistentList()
+    }
+
+    "Given favorite market toggle, When OnFavoriteClick is triggered, Then calls toggleFavoriteMarketListUseCase" {
+        val marketModel = MarketModel(
+            id = "1",
+            name = "Bitcoin",
+            symbol = "BTC",
+            currentPrice = 50000.0,
+            priceChangePercentage24h = 5.0,
+            imageUrl = "https://example.com/bitcoin.png",
+            isFavorite = false,
+        )
+        coEvery { toggleFavoriteMarketListUseCase.invoke(any()) } just Runs
+
+        viewModel.event(MarketListContract.Event.OnFavoriteClick(market = marketModel))
+
+        coVerify { toggleFavoriteMarketListUseCase.invoke(marketModel.toMarket()) }
+    }
+
+    "Given an exception occurs, When fetching market list, Then updates state with error" {
+        coEvery { getMarketListUseCase.invoke() } returns flow { throw RuntimeException("Error occurred") }
+
+        viewModel.event(MarketListContract.Event.OnGetMarketList)
+
+        viewModel.baseState.value shouldBe BaseContract.BaseState.OnError(
+            errors = Errors.ExceptionError(message = "Error occurred"),
         )
     }
 

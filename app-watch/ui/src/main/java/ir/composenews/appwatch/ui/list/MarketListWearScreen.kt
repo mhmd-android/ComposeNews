@@ -14,14 +14,19 @@ import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
-import ir.composenews.base.BaseRoute
+import ir.composenews.base.LoadableData
+import ir.composenews.base.errorViewMapper
+import ir.composenews.base.isLoading
 import ir.composenews.base.use
 import ir.composenews.designsystem.component.pull_refresh_indicator.pullRefresh
 import ir.composenews.designsystem.component.pull_refresh_indicator.rememberPullRefreshState
+import ir.composenews.designsystem.widget.ErrorView
 import ir.composenews.extensions.roundToTwoDecimalPlaces
 import ir.composenews.marketlist.MarketListContract
 import ir.composenews.marketlist.MarketListViewModel
+import ir.composenews.network.Errors
 import ir.composenews.uimarket.model.MarketModel
+import kotlinx.collections.immutable.PersistentList
 
 @Composable
 fun MarketListWearRoute(
@@ -36,33 +41,27 @@ fun MarketListWearRoute(
             event.invoke(MarketListContract.Event.OnGetMarketList)
         }
     }
-
-    BaseRoute(
-        baseViewModel = viewModel,
-        shimmerView = {
-            ShimmerMarketListItem()
+    MarketListWearScreen(
+        state = state,
+        onNavigateToDetailScreen = onNavigateToDetailScreen,
+        onRefresh = {
+            event.invoke(MarketListContract.Event.OnGetMarketList)
         },
-    ) {
-        MarketListWearScreen(
-            marketListState = state,
-            onNavigateToDetailScreen = onNavigateToDetailScreen,
-            onRefresh = {
-                event.invoke(MarketListContract.Event.OnRefresh)
-            },
-        )
-    }
+    )
 }
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
 private fun MarketListWearScreen(
-    marketListState: MarketListContract.State,
+    state: MarketListContract.State,
     onNavigateToDetailScreen: (market: MarketModel) -> Unit,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val refreshState =
-        rememberPullRefreshState(refreshing = marketListState.refreshing, onRefresh = onRefresh)
+    val refreshState = rememberPullRefreshState(
+        refreshing = state.marketList.isLoading,
+        onRefresh = onRefresh,
+    )
 
     val listState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
@@ -76,30 +75,44 @@ private fun MarketListWearScreen(
             .fillMaxWidth()
             .pullRefresh(refreshState),
     ) {
-        AnimatedVisibility(
-            visible = !marketListState.refreshing,
-            enter = fadeIn(),
-            exit = fadeOut(),
-        ) {
-            ScalingLazyColumn(
-                columnState = listState,
-            ) {
-                items(
-                    items = marketListState.marketList,
-                    key = { it.name },
-                ) { market ->
-                    MarketItem(
-                        modifier = modifier,
-                        name = market.name,
-                        symbol = market.symbol,
-                        urlToImage = market.imageUrl,
-                        price = market.currentPrice.toString(),
-                        priceChangePercentage24h =
-                        market.priceChangePercentage24h.roundToTwoDecimalPlaces(),
-                        onItemClick = { onNavigateToDetailScreen(market) },
-                    )
+        when (state.marketList) {
+            LoadableData.Loading -> {
+                ShimmerMarketListItem()
+            }
+
+            is LoadableData.Error<*> -> {
+                ErrorView(errorMessage = errorViewMapper((state.marketList as LoadableData.Error<*>).error as Errors))
+            }
+
+            is LoadableData.Loaded -> {
+                AnimatedVisibility(
+                    visible = !state.marketList.isLoading,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    ScalingLazyColumn(
+                        columnState = listState,
+                    ) {
+                        items(
+                            items = (state.marketList as LoadableData.Loaded<PersistentList<MarketModel>>).data,
+                            key = { it.name },
+                        ) { market ->
+                            MarketItem(
+                                modifier = modifier,
+                                name = market.name,
+                                symbol = market.symbol,
+                                urlToImage = market.imageUrl,
+                                price = market.currentPrice.toString(),
+                                priceChangePercentage24h =
+                                market.priceChangePercentage24h.roundToTwoDecimalPlaces(),
+                                onItemClick = { onNavigateToDetailScreen(market) },
+                            )
+                        }
+                    }
                 }
             }
+
+            else -> {}
         }
     }
 }
