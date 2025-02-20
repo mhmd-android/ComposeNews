@@ -16,9 +16,7 @@ fun NavGraphBuilder.wearMarketDetail(uiState: MainContract.State) {
     ) { entry ->
         val market = entry.parcelableData<MarketModel>(Destinations.MarketDetailScreen().market)
             ?: uiState.market as MarketModel
-        MarketDetailWearRoute(
-            market = market,
-        )
+        MarketDetailWearRoute(market = market)
     }
 }
 

@@ -3,6 +3,7 @@ package ir.composenews.marketlist
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -14,6 +15,23 @@ import ir.composenews.uimarket.model.MarketModel
 import kotlinx.collections.immutable.persistentListOf
 import org.junit.Rule
 import org.junit.Test
+
+@Composable
+fun TestableMarketListScreen(
+    marketListState: MarketListContract.State,
+    showFavoriteList: Boolean,
+    onNavigateToDetailScreen: (market: MarketModel) -> Unit,
+    onFavoriteClick: (market: MarketModel) -> Unit,
+    onRefresh: () -> Unit,
+) {
+    MarketListScreen(
+        state = marketListState,
+        showFavoriteList = showFavoriteList,
+        onNavigateToDetailScreen = onNavigateToDetailScreen,
+        onFavoriteClick = onFavoriteClick,
+        onRefresh = onRefresh,
+    )
+}
 
 class MarketListScreenTest {
     @get:Rule

@@ -4,8 +4,8 @@ package ir.composenews.marketlist
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.composenews.base.BaseContract
 import ir.composenews.base.BaseViewModel
+import ir.composenews.base.LoadableData
 import ir.composenews.core_test.dispatcher.DispatcherProvider
 import ir.composenews.domain.use_case.GetFavoriteMarketListUseCase
 import ir.composenews.domain.use_case.GetMarketListUseCase
@@ -37,9 +37,8 @@ class MarketListViewModel @Inject constructor(
     override val state: StateFlow<MarketListContract.State> = mutableState.asStateFlow()
 
     override fun event(event: MarketListContract.Event) = when (event) {
-        MarketListContract.Event.OnGetMarketList -> getData()
-        MarketListContract.Event.OnRefresh -> getData(isRefreshing = true)
-        is MarketListContract.Event.OnFavoriteClick -> onFavoriteClick(news = event.market)
+        is MarketListContract.Event.OnGetMarketList -> getData()
+        is MarketListContract.Event.OnFavoriteClick -> onFavoriteClick(marketModel = event.market)
         is MarketListContract.Event.OnSetShowFavoriteList -> onSetShowFavoriteList(
             showFavoriteList = event.showFavoriteList,
         )
@@ -51,13 +50,12 @@ class MarketListViewModel @Inject constructor(
         }
     }
 
-    private fun getData(isRefreshing: Boolean = false) {
-        if (isRefreshing) {
-            mutableState.update {
-                it.copy(refreshing = true)
-            }
-        }
+    private fun getData() {
         viewModelScope.launch {
+            mutableState.update {
+                it.copy(marketList = LoadableData.Loading)
+            }
+
             if (mutableState.value.showFavoriteList) {
                 getFavoriteMarketList()
             } else {
@@ -66,45 +64,36 @@ class MarketListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getMarketList() {
-        mutableBaseState.update { BaseContract.BaseState.OnLoading }
-        getMarketListUseCase()
-            .onEach { result ->
-                mutableState.update { prevState ->
-                    prevState.copy(
-                        marketList = result.map { it.toMarketModel() }.toPersistentList(),
-                        refreshing = false,
-                        showFavoriteEmptyState = result.isEmpty(),
-                    )
-                }
-                mutableBaseState.update { BaseContract.BaseState.OnSuccess }
-            }
-            .catch { exception ->
-                mutableBaseState.update {
-                    BaseContract.BaseState.OnError(
-                        errors = Errors.ExceptionError(message = exception.message),
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-    }
+    private suspend fun getMarketList() = getMarketListUseCase().onEach { newList ->
+        val marketList = newList.map { it.toMarketModel() }.toPersistentList()
 
-    private fun getFavoriteMarketList() {
-        getFavoriteMarketListUseCase().onEach { newList ->
-            mutableState.update { prevState ->
-                prevState.copy(
-                    marketList = newList.map { it.toMarketModel() }.toPersistentList(),
-                    refreshing = false,
-                    showFavoriteEmptyState = newList.isEmpty(),
+        mutableState.update {
+            it.copy(marketList = LoadableData.Loaded(data = marketList))
+        }
+    }
+        .catch { exception ->
+            mutableState.update {
+                it.copy(
+                    marketList = LoadableData.Error(
+                        error = Errors.ExceptionError(message = exception.message),
+                    ),
                 )
             }
-        }.launchIn(viewModelScope)
-    }
+        }
+        .launchIn(viewModelScope)
 
-    private fun onFavoriteClick(news: MarketModel) {
+    private fun getFavoriteMarketList() = getFavoriteMarketListUseCase().onEach { newList ->
+        val marketList = newList.map { it.toMarketModel() }.toPersistentList()
+
+        mutableState.update {
+            it.copy(marketList = LoadableData.Loaded(data = marketList))
+        }
+    }.launchIn(viewModelScope)
+
+    private fun onFavoriteClick(marketModel: MarketModel) {
         viewModelScope.launch {
             onIO {
-                toggleFavoriteMarketListUseCase(news.toMarket())
+                toggleFavoriteMarketListUseCase(marketModel.toMarket())
             }
         }
     }
