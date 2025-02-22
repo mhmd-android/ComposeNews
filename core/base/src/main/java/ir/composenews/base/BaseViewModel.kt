@@ -5,7 +5,7 @@ import ir.composenews.core_test.dispatcher.DispatcherProvider
 import ir.composenews.core_test.dispatcher.PlatformDispatcherProvider
 import kotlinx.coroutines.withContext
 
-open class BaseViewModel(
+abstract class BaseViewModel(
     protected val dispatcherProvider: DispatcherProvider = PlatformDispatcherProvider(),
 ) : ViewModel() {
 

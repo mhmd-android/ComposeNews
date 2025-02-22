@@ -70,17 +70,15 @@ class MarketListViewModel @Inject constructor(
         mutableState.update {
             it.copy(marketList = LoadableData.Loaded(data = marketList))
         }
-    }
-        .catch { exception ->
-            mutableState.update {
-                it.copy(
-                    marketList = LoadableData.Error(
-                        error = Errors.ExceptionError(message = exception.message),
-                    ),
-                )
-            }
+    }.catch { exception ->
+        mutableState.update {
+            it.copy(
+                marketList = LoadableData.Error(
+                    error = Errors.ExceptionError(message = exception.message),
+                ),
+            )
         }
-        .launchIn(viewModelScope)
+    }.launchIn(viewModelScope)
 
     private fun getFavoriteMarketList() = getFavoriteMarketListUseCase().onEach { newList ->
         val marketList = newList.map { it.toMarketModel() }.toPersistentList()

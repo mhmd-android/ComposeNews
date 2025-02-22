@@ -43,7 +43,6 @@ import ir.composenews.designsystem.theme.ComposeNewsTheme
 import ir.composenews.designsystem.widget.ErrorView
 import ir.composenews.marketdetail.MarketDetailContract.State
 import ir.composenews.marketdetail.preview_provider.MarketDetailStateProvider
-import ir.composenews.network.Errors
 import ir.composenews.uimarket.model.MarketModel
 
 @Composable
@@ -73,78 +72,83 @@ private fun MarketDetailScreen(
     marketDetailState: State,
     onFavoriteClick: (market: MarketModel) -> Unit,
 ) {
-    if (marketDetailState.marketDetail.isLoading || marketDetailState.marketChart.isLoading) {
-        MarketDetailLoadingView()
-    } else if (marketDetailState.marketDetail is LoadableData.Error<*> || marketDetailState.marketChart is LoadableData.Error<*>) {
-        if (marketDetailState.marketDetail is LoadableData.Error<*>) {
-            ErrorView(errorMessage = errorViewMapper(marketDetailState.marketDetail.error as Errors))
-        } else if (marketDetailState.marketChart is LoadableData.Error<*>) {
-            ErrorView(errorMessage = errorViewMapper(marketDetailState.marketChart.error as Errors))
-        }
-    } else if (marketDetailState.market !is LoadableData.Initial &&
-        marketDetailState.marketChart !is LoadableData.Initial &&
-        marketDetailState.marketDetail !is LoadableData.Initial
-    ) {
-        val market = remember {
-            (marketDetailState.market as LoadableData.Loaded).data
+    when {
+        marketDetailState.marketDetail.isLoading || marketDetailState.marketChart.isLoading -> {
+            MarketDetailLoadingView()
         }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
+        marketDetailState.marketDetail is LoadableData.Error -> {
+            ErrorView(errorMessage = errorViewMapper(marketDetailState.marketDetail.error))
+        }
+
+        marketDetailState.marketChart is LoadableData.Error -> {
+            ErrorView(errorMessage = errorViewMapper(marketDetailState.marketChart.error))
+        }
+
+        listOf(
+            marketDetailState.market,
+            marketDetailState.marketChart,
+            marketDetailState.marketDetail,
+        ).none { it is LoadableData.Initial } -> {
+            val market = remember { (marketDetailState.market as LoadableData.Loaded).data }
+
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(model = market.imageUrl),
-                            contentDescription = market.name,
+                        Row(
                             modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape),
-                        )
-                        Column(
-                            modifier = Modifier.weight(1F),
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Text(
-                                text = market.name,
-                                style = MaterialTheme.typography.headlineSmall,
+                            Image(
+                                painter = rememberAsyncImagePainter(model = market.imageUrl),
+                                contentDescription = market.name,
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(CircleShape),
                             )
-                            Text(
-                                text = "${market.currentPrice} $",
-                                style = MaterialTheme.typography.bodyLarge,
-                            )
+                            Column(
+                                modifier = Modifier.weight(1F),
+                            ) {
+                                Text(
+                                    text = market.name,
+                                    style = MaterialTheme.typography.headlineSmall,
+                                )
+                                Text(
+                                    text = "${market.currentPrice} $",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                            }
                         }
                     }
+
+                    (marketDetailState.marketChart as LoadableData.Loaded).data.prices.let { prices ->
+                        QuadLineChart(
+                            data = prices,
+                        )
+                    }
+                    MarketData()
+                    MarketDetail(marketDetailState)
+                    Spacer(modifier = Modifier.height(80.dp))
                 }
 
-                (marketDetailState.marketChart as LoadableData.Loaded).data.prices.let { prices ->
-                    QuadLineChart(
-                        data = prices,
-                    )
-                }
-                MarketData()
-                MarketDetail(marketDetailState)
-                Spacer(modifier = Modifier.height(80.dp))
-            }
-
-            FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp),
-                onClick = {},
-            ) {
-                FavoriteIcon(isFavorite = market.isFavorite) {
-                    onFavoriteClick(market)
+                FloatingActionButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp),
+                    onClick = {},
+                ) {
+                    FavoriteIcon(isFavorite = market.isFavorite) {
+                        onFavoriteClick(market)
+                    }
                 }
             }
         }

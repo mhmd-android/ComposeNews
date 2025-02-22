@@ -1,13 +1,23 @@
 package ir.composenews.base
 
+import ir.composenews.network.Errors
+
 sealed class LoadableData<out T> {
-    data object Initial : LoadableData<Nothing>()
+    abstract val data: T?
 
-    data object Loading : LoadableData<Nothing>()
+    data object Initial : LoadableData<Nothing>() {
+        override val data = null
+    }
 
-    data class Loaded<T>(val data: T) : LoadableData<T>()
+    data object Loading : LoadableData<Nothing>() {
+        override val data = null
+    }
 
-    data class Error<E>(val error: E) : LoadableData<Nothing>()
+    data class Loaded<T>(override val data: T) : LoadableData<T>()
+
+    data class Error(val error: Errors) : LoadableData<Nothing>() {
+        override val data = null
+    }
 }
 
 val LoadableData<*>.isLoading: Boolean
