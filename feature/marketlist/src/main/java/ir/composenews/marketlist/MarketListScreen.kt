@@ -13,7 +13,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -37,10 +36,8 @@ import ir.composenews.designsystem.component.pull_refresh_indicator.rememberPull
 import ir.composenews.designsystem.preview.ThemePreviews
 import ir.composenews.designsystem.theme.ComposeNewsTheme
 import ir.composenews.designsystem.widget.ErrorView
-import ir.composenews.designsystem.widget.LoadingView
 import ir.composenews.marketlist.component.MarketListItem
 import ir.composenews.marketlist.preview_provider.MarketListStateProvider
-import ir.composenews.network.Errors
 import ir.composenews.uimarket.model.MarketModel
 
 @Composable
@@ -95,12 +92,8 @@ fun MarketListScreen(
         )
 
         when (state.marketList) {
-            is LoadableData.Error<*> -> {
-                ErrorView(errorMessage = errorViewMapper(state.marketList.error as Errors))
-            }
-
-            LoadableData.Loading -> {
-                LoadingView(modifier = Modifier.fillMaxSize())
+            is LoadableData.Error -> {
+                ErrorView(errorMessage = errorViewMapper(state.marketList.error))
             }
 
             is LoadableData.Loaded -> {
@@ -153,8 +146,6 @@ fun MarketListScreen(
         }
     }
 }
-
-// LoadableComponent
 
 @ThemePreviews
 @Composable
