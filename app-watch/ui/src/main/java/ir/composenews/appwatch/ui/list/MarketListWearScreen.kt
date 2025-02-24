@@ -24,7 +24,6 @@ import ir.composenews.designsystem.widget.ErrorView
 import ir.composenews.extensions.roundToTwoDecimalPlaces
 import ir.composenews.marketlist.MarketListContract
 import ir.composenews.marketlist.MarketListViewModel
-import ir.composenews.network.Errors
 import ir.composenews.uimarket.model.MarketModel
 import kotlinx.collections.immutable.PersistentList
 
@@ -80,8 +79,8 @@ private fun MarketListWearScreen(
                 ShimmerMarketListItem()
             }
 
-            is LoadableData.Error<*> -> {
-                ErrorView(errorMessage = errorViewMapper((state.marketList as LoadableData.Error<*>).error as Errors))
+            is LoadableData.Error -> {
+                ErrorView(errorMessage = errorViewMapper((state.marketList as LoadableData.Error).error))
             }
 
             is LoadableData.Loaded -> {
