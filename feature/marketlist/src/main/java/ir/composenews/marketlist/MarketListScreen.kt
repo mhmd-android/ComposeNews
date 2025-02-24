@@ -3,6 +3,7 @@
     "ComplexCondition",
     "ktlint:standard:function-naming",
     "UnusedPrivateMember",
+    "LongMethod",
 )
 
 package ir.composenews.marketlist

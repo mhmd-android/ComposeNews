@@ -1,3 +1,5 @@
+@file:Suppress("TooGenericExceptionThrown")
+
 package ir.composenews.marketlist
 
 import io.kotest.core.spec.style.StringSpec
@@ -126,7 +128,7 @@ class MarketListViewModelTest : StringSpec({
             viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(expected))
             advanceUntilIdle()
 
-            val actual = viewModel.state.value.showFavoriteList
+//            val actual = viewModel.state.value.showFavoriteList
 
 //            actual shouldBeEqual expected
         }
@@ -139,7 +141,7 @@ class MarketListViewModelTest : StringSpec({
             viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(expected))
             advanceUntilIdle()
 
-            val actual = viewModel.state.value.showFavoriteList
+//            val actual = viewModel.state.value.showFavoriteList
 
 //            actual shouldBeEqual expected
         }

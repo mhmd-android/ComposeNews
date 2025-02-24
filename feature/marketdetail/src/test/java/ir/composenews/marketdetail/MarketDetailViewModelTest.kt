@@ -50,7 +50,7 @@ class MarketDetailViewModelTest : StringSpec({
             viewModel.event(MarketDetailContract.Event.SetMarket(market))
             advanceUntilIdle()
 
-            val uiState = viewModel.state.value
+//            val uiState = viewModel.state.value
 //            market shouldBe uiState.market
         }
     }
@@ -68,7 +68,7 @@ class MarketDetailViewModelTest : StringSpec({
                 toggleFavoriteMarketListUseCase.invoke(market.toMarket())
             }
 
-            val uiState = viewModel.state.value
+//            val uiState = viewModel.state.value
 //            expected shouldBe uiState.market
         }
     }
@@ -86,7 +86,7 @@ class MarketDetailViewModelTest : StringSpec({
                 toggleFavoriteMarketListUseCase(market.toMarket())
             }
 
-            val uiState = viewModel.state.value
+//            val uiState = viewModel.state.value
 //            expected shouldBe uiState.market
         }
     }
@@ -102,7 +102,7 @@ class MarketDetailViewModelTest : StringSpec({
             viewModel.event(MarketDetailContract.Event.GetMarketChart(market.id))
             advanceUntilIdle()
 
-            val uiState = viewModel.state.value
+//            val uiState = viewModel.state.value
 //            uiState.marketChart shouldBeEqual LoadableData.Loaded(data = chartResult)
         }
     }
@@ -122,7 +122,7 @@ class MarketDetailViewModelTest : StringSpec({
             viewModel.event(MarketDetailContract.Event.GetMarketChart(market.id))
             advanceUntilIdle()
 
-            val uiState = viewModel.state.value
+//            val uiState = viewModel.state.value
 //            uiState.marketChart is LoadableData.Error
         }
     }
