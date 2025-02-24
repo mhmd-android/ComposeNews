@@ -1,4 +1,4 @@
-@file:Suppress("UnusedPrivateMember")
+@file:Suppress("UnusedPrivateMember", "LongMethod", "ForbiddenComment")
 
 package ir.composenews.appwatch.ui.details
 
