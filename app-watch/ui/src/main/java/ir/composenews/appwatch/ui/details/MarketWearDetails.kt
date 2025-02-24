@@ -46,7 +46,6 @@ import ir.composenews.marketdetail.MarketDetailContract.State
 import ir.composenews.marketdetail.MarketDetailViewModel
 import ir.composenews.marketdetail.formatNumber
 import ir.composenews.marketdetail.preview_provider.MarketDetailStateProvider
-import ir.composenews.network.Errors
 import ir.composenews.uimarket.model.MarketModel
 
 private const val HALF_WIDTH_RATIO = 0.5f
@@ -81,59 +80,65 @@ private fun MarketDetailScreen(
         ),
     )
 
-    if (marketDetailState.marketDetail.isLoading || marketDetailState.marketChart.isLoading) {
-        ShimmerMarketDetail()
-    } else if (marketDetailState.marketDetail is LoadableData.Error<*> || marketDetailState.marketChart is LoadableData.Error<*>) {
-        if (marketDetailState.marketDetail is LoadableData.Error<*>) {
-            ErrorView(errorMessage = errorViewMapper((marketDetailState.marketDetail as LoadableData.Error<*>).error as Errors))
-        } else {
-            ErrorView(errorMessage = errorViewMapper((marketDetailState.marketChart as LoadableData.Error<*>).error as Errors))
-        }
-    } else {
-        val market = remember {
-            (marketDetailState.market as LoadableData.Loaded).data
+    when {
+        marketDetailState.marketDetail.isLoading || marketDetailState.marketChart.isLoading -> {
+            ShimmerMarketDetail()
         }
 
-        ScalingLazyColumn(columnState = listState) {
-            item {
-                Image(
-                    painter = rememberAsyncImagePainter(model = market.imageUrl),
-                    contentDescription = market.name,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape),
-                )
-            }
-            item {
-                Text(
-                    text = market.name,
-                    style = MaterialTheme.typography.title1,
-                )
-            }
-            item {
-                Text(
-                    text = "${market.currentPrice} $",
-                    style = MaterialTheme.typography.body1,
-                )
-            }
-            item {
-                (marketDetailState.marketChart as LoadableData.Loaded).data.prices.let { prices ->
-                    QuadLineChart(
-                        data = prices,
+        marketDetailState.marketDetail is LoadableData.Error -> {
+            ErrorView(errorMessage = errorViewMapper((marketDetailState.marketDetail as LoadableData.Error).error))
+        }
+
+        marketDetailState.marketChart is LoadableData.Error -> {
+            ErrorView(errorMessage = errorViewMapper((marketDetailState.marketChart as LoadableData.Error).error))
+        }
+
+        listOf(
+            marketDetailState.market,
+            marketDetailState.marketChart,
+            marketDetailState.marketDetail,
+        ).none { it is LoadableData.Initial } -> {
+            val market = remember { (marketDetailState.market as LoadableData.Loaded).data }
+
+            ScalingLazyColumn(columnState = listState) {
+                item {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = market.imageUrl),
+                        contentDescription = market.name,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape),
                     )
                 }
-            }
-            item {
-                Text(
-                    text = "Market Data",
-                    style = MaterialTheme.typography.title2,
-                )
-            }
-            item {
-                HorizontalDivider()
-            }
-            item {
-                MarketDetail(marketDetailState)
+                item {
+                    Text(
+                        text = market.name,
+                        style = MaterialTheme.typography.title1,
+                    )
+                }
+                item {
+                    Text(
+                        text = "${market.currentPrice} $",
+                        style = MaterialTheme.typography.body1,
+                    )
+                }
+                item {
+                    (marketDetailState.marketChart as LoadableData.Loaded).data.prices.let { prices ->
+                        QuadLineChart(data = prices)
+                    }
+                }
+                item {
+                    Text(
+                        text = "Market Data",
+                        style = MaterialTheme.typography.title2,
+                    )
+                }
+                item {
+                    HorizontalDivider()
+                }
+                item {
+                    MarketDetail(marketDetailState)
+                }
             }
         }
     }
