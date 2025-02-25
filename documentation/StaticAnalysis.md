@@ -9,7 +9,7 @@ This project leverages static analysis to ensure that the codebase meets certain
 To run a detekt validation, use the one of the following Gradle commands:
 
 ```
-./gradlew detekt # Runs over each module synchronously
+./gradlew detektAll # Runs over each module synchronously
 ```
 
 ## Ktlint
