@@ -4,8 +4,8 @@ package ir.composenews.marketdetail
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.composenews.base.BaseContract
 import ir.composenews.base.BaseViewModel
+import ir.composenews.base.LoadableData
 import ir.composenews.core_test.dispatcher.DispatcherProvider
 import ir.composenews.domain.use_case.GetMarketChartUseCase
 import ir.composenews.domain.use_case.GetMarketDetailUseCase
@@ -42,110 +42,89 @@ class MarketDetailViewModel @Inject constructor(
         is MarketDetailContract.Event.GetMarketDetail -> getMarketDetail(id = event.marketId)
     }
 
-    private fun getMarketDetail(id: String, isRefreshing: Boolean = false) {
-        mutableBaseState.update { BaseContract.BaseState.OnLoading }
+    private fun getMarketDetail(id: String) {
+        mutableState.update {
+            it.copy(marketDetail = LoadableData.Loading)
+        }
+
         getMarketDetailUseCase(id = id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     result.data.let { detail ->
-                        if (!isRefreshing) {
-                            mutableBaseState.update {
-                                BaseContract.BaseState.OnSuccess
-                            }
-                        } else {
-                            mutableState.update {
-                                MarketDetailContract.State(
-                                    refreshing = false,
-                                )
-                            }
-                        }
                         mutableState.update {
-                            it.copy(marketDetail = detail, loading = false)
+                            it.copy(marketDetail = LoadableData.Loaded(data = detail))
                         }
                     }
                 }
 
                 is Resource.Error -> {
-                    mutableBaseState.update {
-                        BaseContract.BaseState.OnError(
-                            errors = result.error,
+                    mutableState.update {
+                        it.copy(
+                            marketDetail = LoadableData.Error(error = result.error),
                         )
                     }
                 }
             }
         }.catch { exception ->
-            mutableBaseState.update {
-                BaseContract.BaseState.OnError(
-                    Errors.ExceptionError(message = exception.message),
+            mutableState.update {
+                it.copy(
+                    marketDetail = LoadableData.Error(error = Errors.ExceptionError(message = exception.message)),
                 )
             }
         }.launchIn(viewModelScope)
     }
 
-    private fun setMarket(market: MarketModel?) {
+    private fun setMarket(market: MarketModel) {
         mutableState.update {
-            it.copy(market = market)
+            it.copy(market = LoadableData.Loaded(market))
         }
     }
 
-    private fun onFavoriteClick(market: MarketModel?) {
-        market?.let {
-            viewModelScope.launch {
-                onIO {
-                    toggleFavoriteMarketListUseCase(market.toMarket())
-                }
-                toggleFavoriteState()
-            }
+    private fun getMarketChart(id: String) {
+        mutableState.update {
+            it.copy(marketChart = LoadableData.Loading)
         }
-    }
 
-    private fun toggleFavoriteState() {
-        mutableState.update { state ->
-            state.market?.let { market ->
-                state.copy(
-                    market = market.copy(isFavorite = !market.isFavorite),
-                )
-            } ?: state
-        }
-    }
-
-    private fun getMarketChart(id: String, isRefreshing: Boolean = false) {
-        mutableBaseState.update { BaseContract.BaseState.OnLoading }
         getMarketChartUseCase(id = id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     result.data.let { chart ->
-                        if (!isRefreshing) {
-                            mutableBaseState.update {
-                                BaseContract.BaseState.OnSuccess
-                            }
-                        } else {
-                            mutableState.update {
-                                MarketDetailContract.State(
-                                    refreshing = false,
-                                )
-                            }
-                        }
                         mutableState.update {
-                            it.copy(marketChart = chart, loading = false)
+                            it.copy(marketChart = LoadableData.Loaded(data = chart))
                         }
                     }
                 }
 
                 is Resource.Error -> {
-                    mutableBaseState.update {
-                        BaseContract.BaseState.OnError(
-                            errors = result.error,
+                    mutableState.update {
+                        it.copy(
+                            marketChart = LoadableData.Error(error = result.error),
                         )
                     }
                 }
             }
         }.catch { exception ->
-            mutableBaseState.update {
-                BaseContract.BaseState.OnError(
-                    errors = Errors.ExceptionError(message = exception.message),
+            mutableState.update {
+                it.copy(
+                    marketChart = LoadableData.Error(error = Errors.ExceptionError(message = exception.message)),
                 )
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun onFavoriteClick(market: MarketModel) {
+        viewModelScope.launch {
+            onIO {
+                toggleFavoriteMarketListUseCase(market.toMarket())
+            }
+            toggleFavoriteState()
+        }
+    }
+
+    private fun toggleFavoriteState() {
+        val market = (mutableState.value.market as LoadableData.Loaded).data
+        val isFavorite = market.isFavorite
+        val newMarket = LoadableData.Loaded(market.copy(isFavorite = isFavorite))
+        mutableState.update { it.copy(market = newMarket) }
     }
 }

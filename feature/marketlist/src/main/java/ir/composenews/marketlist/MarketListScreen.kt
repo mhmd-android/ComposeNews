@@ -1,4 +1,10 @@
-@file:Suppress("MaxLineLength", "ComplexCondition", "ktlint:standard:function-naming", "UnusedPrivateMember")
+@file:Suppress(
+    "MaxLineLength",
+    "ComplexCondition",
+    "ktlint:standard:function-naming",
+    "UnusedPrivateMember",
+    "LongMethod",
+)
 
 package ir.composenews.marketlist
 
@@ -6,7 +12,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,23 +25,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import ir.composenews.base.BaseRoute
+import ir.composenews.base.LoadableData
+import ir.composenews.base.errorViewMapper
+import ir.composenews.base.isLoading
 import ir.composenews.base.use
 import ir.composenews.designsystem.R
 import ir.composenews.designsystem.component.EmptyStateAnimation
-import ir.composenews.designsystem.component.ShimmerMarketListItem
 import ir.composenews.designsystem.component.pull_refresh_indicator.PullRefreshIndicator
 import ir.composenews.designsystem.component.pull_refresh_indicator.pullRefresh
 import ir.composenews.designsystem.component.pull_refresh_indicator.rememberPullRefreshState
 import ir.composenews.designsystem.preview.ThemePreviews
 import ir.composenews.designsystem.theme.ComposeNewsTheme
+import ir.composenews.designsystem.widget.ErrorView
 import ir.composenews.marketlist.component.MarketListItem
 import ir.composenews.marketlist.preview_provider.MarketListStateProvider
 import ir.composenews.uimarket.model.MarketModel
 
-/**
- * LongParameterList - > compose unimited
- */
 @Composable
 fun MarketListRoute(
     viewModel: MarketListViewModel = hiltViewModel(),
@@ -50,39 +54,31 @@ fun MarketListRoute(
             event.invoke(MarketListContract.Event.OnGetMarketList)
         }
     }
-
-    BaseRoute(
-        baseViewModel = viewModel,
-        shimmerView = {
-            ShimmerMarketListItem()
+    MarketListScreen(
+        state = state,
+        onNavigateToDetailScreen = onNavigateToDetailScreen,
+        showFavoriteList = showFavoriteList,
+        onFavoriteClick = { market ->
+            event.invoke(MarketListContract.Event.OnFavoriteClick(market = market))
         },
-    ) {
-        MarketListScreen(
-            marketListState = state,
-            onNavigateToDetailScreen = onNavigateToDetailScreen,
-            showFavoriteList = showFavoriteList,
-            onFavoriteClick = { market ->
-                event.invoke(MarketListContract.Event.OnFavoriteClick(market = market))
-            },
-            onRefresh = {
-                event.invoke(MarketListContract.Event.OnRefresh)
-            },
-        )
-    }
+        onRefresh = {
+            event.invoke(MarketListContract.Event.OnGetMarketList)
+        },
+    )
 }
 
-@Suppress("ktlint:standard:function-naming")
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MarketListScreen(
-    marketListState: MarketListContract.State,
+fun MarketListScreen(
+    state: MarketListContract.State,
     showFavoriteList: Boolean,
     onNavigateToDetailScreen: (market: MarketModel) -> Unit,
     onFavoriteClick: (market: MarketModel) -> Unit,
     onRefresh: () -> Unit,
 ) {
-    val refreshState =
-        rememberPullRefreshState(refreshing = marketListState.refreshing, onRefresh = onRefresh)
+    val refreshState = rememberPullRefreshState(
+        refreshing = state.marketList.isLoading,
+        onRefresh = onRefresh,
+    )
 
     Box(
         modifier =
@@ -90,53 +86,65 @@ private fun MarketListScreen(
             .fillMaxWidth()
             .pullRefresh(refreshState),
     ) {
-        AnimatedVisibility(
-            visible = !marketListState.refreshing,
-            enter = fadeIn(),
-            exit = fadeOut(),
-        ) {
-            if (marketListState.showFavoriteEmptyState && marketListState.showFavoriteList) {
-                EmptyStateAnimation(
-                    lottieCompositionSpec =
-                    LottieCompositionSpec.RawRes(
-                        R.raw.empty_state_animation,
-                    ),
-                )
-            } else {
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(
-                        items = marketListState.marketList,
-                        key = { it.name },
-                    ) { market ->
-                        Column(
-                            modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .animateItemPlacement(
-                                    animationSpec = tween(durationMillis = 250),
-                                ),
-                        ) {
-                            MarketListItem(
-                                modifier = Modifier,
-                                market = market,
-                                showFavoriteList = showFavoriteList,
-                                onItemClick = {
-                                    onNavigateToDetailScreen(market)
-                                },
-                                onFavoriteClick = {
-                                    onFavoriteClick(market)
-                                },
-                            )
+        PullRefreshIndicator(
+            state.marketList.isLoading,
+            refreshState,
+            Modifier.align(Alignment.TopCenter),
+        )
+
+        when (state.marketList) {
+            is LoadableData.Error -> {
+                ErrorView(errorMessage = errorViewMapper(state.marketList.error))
+            }
+
+            is LoadableData.Loaded -> {
+                AnimatedVisibility(
+                    visible = !state.marketList.isLoading,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    if (state.marketList.data.isEmpty() && state.showFavoriteList) {
+                        EmptyStateAnimation(
+                            lottieCompositionSpec = LottieCompositionSpec.RawRes(
+                                R.raw.empty_state_animation,
+                            ),
+                        )
+                    } else {
+                        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                            items(
+                                items = state.marketList.data,
+                                key = { it.name },
+                            ) { market ->
+                                Modifier
+                                    .fillMaxWidth()
+                                Column(
+                                    modifier =
+                                    Modifier.animateItem(
+                                        placementSpec = tween(durationMillis = 250),
+                                        fadeInSpec = null,
+                                        fadeOutSpec = null,
+                                    ),
+                                ) {
+                                    MarketListItem(
+                                        modifier = Modifier,
+                                        market = market,
+                                        showFavoriteList = showFavoriteList,
+                                        onItemClick = {
+                                            onNavigateToDetailScreen(market)
+                                        },
+                                        onFavoriteClick = {
+                                            onFavoriteClick(market)
+                                        },
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
+
+            else -> {}
         }
-        PullRefreshIndicator(
-            marketListState.refreshing,
-            refreshState,
-            Modifier.align(Alignment.TopCenter),
-        )
     }
 }
 
@@ -149,7 +157,7 @@ private fun MarketListScreenPrev(
     ComposeNewsTheme {
         Surface {
             MarketListScreen(
-                marketListState = marketListState,
+                state = marketListState,
                 showFavoriteList = false,
                 onNavigateToDetailScreen = {},
                 onFavoriteClick = {},
@@ -157,21 +165,4 @@ private fun MarketListScreenPrev(
             )
         }
     }
-}
-
-@Composable
-fun TestableMarketListScreen(
-    marketListState: MarketListContract.State,
-    showFavoriteList: Boolean,
-    onNavigateToDetailScreen: (market: MarketModel) -> Unit,
-    onFavoriteClick: (market: MarketModel) -> Unit,
-    onRefresh: () -> Unit,
-) {
-    MarketListScreen(
-        marketListState = marketListState,
-        showFavoriteList = showFavoriteList,
-        onNavigateToDetailScreen = onNavigateToDetailScreen,
-        onFavoriteClick = onFavoriteClick,
-        onRefresh = onRefresh,
-    )
 }

@@ -66,10 +66,10 @@ fun FavoriteIcon(
         contentDescription = "",
         tint = colorTintFavorite,
         modifier = Modifier
-            .graphicsLayer(
-                scaleX = scale,
-                scaleY = scale,
-            )
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .clip(CircleShape)
             .clickable {
                 onFavoriteClick()
