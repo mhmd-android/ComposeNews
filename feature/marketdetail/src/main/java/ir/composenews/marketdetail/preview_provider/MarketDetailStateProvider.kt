@@ -1,4 +1,4 @@
-@file:Suppress("PackageNaming", "PackageName")
+@file:Suppress("PackageNaming", "PackageName", "MagicNumber")
 
 package ir.composenews.marketdetail.preview_provider
 

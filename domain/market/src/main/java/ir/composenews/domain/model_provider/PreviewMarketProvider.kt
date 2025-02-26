@@ -4,7 +4,9 @@ package ir.composenews.domain.model_provider
 
 import ir.composenews.domain.model.Market
 
-val marketList = List(10) { index ->
+private const val MARKET_LIST_COUNT = 10
+
+val marketList = List(MARKET_LIST_COUNT) { index ->
     market().copy(
         name = "name $index",
     )
