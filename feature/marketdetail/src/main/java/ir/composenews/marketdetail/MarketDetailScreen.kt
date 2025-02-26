@@ -1,4 +1,4 @@
-@file:Suppress("UnusedPrivateMember", "LongMethod", "ForbiddenComment")
+@file:Suppress("UnusedPrivateMember", "LongMethod", "ForbiddenComment", "MagicNumber")
 
 package ir.composenews.marketdetail
 
