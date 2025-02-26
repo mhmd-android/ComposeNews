@@ -40,6 +40,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun QuadLineChart(
+    modifier: Modifier = Modifier,
     data: List<Pair<Long, Double>>,
 ) {
     val spacing =
@@ -49,7 +50,9 @@ fun QuadLineChart(
     val upperValue = remember(key1 = data) {
         (data.maxOfOrNull { it.second }?.let { it + it * 0.05 })?.roundToInt() ?: 0
     }
-    val lowerValue = remember(key1 = data) { (data.minOfOrNull { it.second }?.let { it - it * 0.02 }?.toInt() ?: 0) }
+    val lowerValue = remember(key1 = data) {
+        (data.minOfOrNull { it.second }?.let { it - it * 0.02 }?.toInt() ?: 0)
+    }
     val density = LocalDensity.current
 
     val textPaint = remember(density) {
@@ -69,7 +72,7 @@ fun QuadLineChart(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(dimensionResource(R.dimen.quad_line_chart_height))
             .padding(dimensionResource(R.dimen.quad_line_chart_padding)),
@@ -154,7 +157,7 @@ fun QuadLineChartPreview() {
     ComposeNewsTheme {
         Surface {
             QuadLineChart(
-                listOf(
+                data = listOf(
                     Pair(0, 5.2),
                     Pair(1, 12.1),
                     Pair(2, 2.3),

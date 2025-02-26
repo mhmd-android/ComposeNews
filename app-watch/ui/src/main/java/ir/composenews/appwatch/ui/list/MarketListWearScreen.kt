@@ -14,7 +14,7 @@ import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
-import ir.composenews.base.LoadableData
+import ir.composenews.base.LoadableComponent
 import ir.composenews.base.errorViewMapper
 import ir.composenews.base.isLoading
 import ir.composenews.base.use
@@ -25,7 +25,6 @@ import ir.composenews.extensions.roundToTwoDecimalPlaces
 import ir.composenews.marketlist.MarketListContract
 import ir.composenews.marketlist.MarketListViewModel
 import ir.composenews.uimarket.model.MarketModel
-import kotlinx.collections.immutable.PersistentList
 
 @Composable
 fun MarketListWearRoute(
@@ -68,22 +67,20 @@ private fun MarketListWearScreen(
             last = ScalingLazyColumnDefaults.ItemType.Card,
         ),
     )
-
     Box(
         modifier = modifier
             .fillMaxWidth()
             .pullRefresh(refreshState),
     ) {
-        when (state.marketList) {
-            LoadableData.Loading -> {
+        LoadableComponent(
+            loadableData = state.marketList,
+            loading = {
                 ShimmerMarketListItem()
-            }
-
-            is LoadableData.Error -> {
-                ErrorView(errorMessage = errorViewMapper((state.marketList as LoadableData.Error).error))
-            }
-
-            is LoadableData.Loaded -> {
+            },
+            error = { error ->
+                ErrorView(errorMessage = errorViewMapper(error))
+            },
+            loaded = { data ->
                 AnimatedVisibility(
                     visible = !state.marketList.isLoading,
                     enter = fadeIn(),
@@ -93,7 +90,7 @@ private fun MarketListWearScreen(
                         columnState = listState,
                     ) {
                         items(
-                            items = (state.marketList as LoadableData.Loaded<PersistentList<MarketModel>>).data,
+                            items = data,
                             key = { it.name },
                         ) { market ->
                             MarketItem(
@@ -109,9 +106,7 @@ private fun MarketListWearScreen(
                         }
                     }
                 }
-            }
-
-            else -> {}
-        }
+            },
+        )
     }
 }
