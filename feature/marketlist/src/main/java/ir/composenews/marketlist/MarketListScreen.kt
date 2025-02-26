@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import ir.composenews.base.LoadableData
+import ir.composenews.base.LoadableComponent
 import ir.composenews.base.errorViewMapper
 import ir.composenews.base.isLoading
 import ir.composenews.base.use
@@ -79,7 +79,6 @@ fun MarketListScreen(
         refreshing = state.marketList.isLoading,
         onRefresh = onRefresh,
     )
-
     Box(
         modifier =
         Modifier
@@ -91,19 +90,15 @@ fun MarketListScreen(
             refreshState,
             Modifier.align(Alignment.TopCenter),
         )
-
-        when (state.marketList) {
-            is LoadableData.Error -> {
-                ErrorView(errorMessage = errorViewMapper(state.marketList.error))
-            }
-
-            is LoadableData.Loaded -> {
+        LoadableComponent(
+            loadableData = state.marketList,
+            loaded = { data ->
                 AnimatedVisibility(
                     visible = !state.marketList.isLoading,
                     enter = fadeIn(),
                     exit = fadeOut(),
                 ) {
-                    if (state.marketList.data.isEmpty() && state.showFavoriteList) {
+                    if (data.isEmpty() && state.showFavoriteList) {
                         EmptyStateAnimation(
                             lottieCompositionSpec = LottieCompositionSpec.RawRes(
                                 R.raw.empty_state_animation,
@@ -112,7 +107,7 @@ fun MarketListScreen(
                     } else {
                         LazyColumn(modifier = Modifier.fillMaxWidth()) {
                             items(
-                                items = state.marketList.data,
+                                items = data,
                                 key = { it.name },
                             ) { market ->
                                 Modifier
@@ -141,10 +136,11 @@ fun MarketListScreen(
                         }
                     }
                 }
-            }
-
-            else -> {}
-        }
+            },
+            error = { error ->
+                ErrorView(errorMessage = errorViewMapper(error))
+            },
+        )
     }
 }
 
