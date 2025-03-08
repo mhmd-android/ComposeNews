@@ -39,10 +39,10 @@ class MarketDetailViewModelTest : StringSpec({
 
     beforeEach {
         viewModel = MarketDetailViewModel(
-            getMarketChartUseCase,
-            getMarketDetailUseCase,
-            toggleFavoriteMarketListUseCase,
-            dispatcherProvider,
+            getMarketChartUseCase = getMarketChartUseCase,
+            getMarketDetailUseCase = getMarketDetailUseCase,
+            toggleFavoriteMarketListUseCase = toggleFavoriteMarketListUseCase,
+            dispatcherProvider = dispatcherProvider,
         )
     }
 
@@ -54,7 +54,7 @@ class MarketDetailViewModelTest : StringSpec({
         initialState.marketChart.shouldBeInstanceOf<LoadableData.Initial>()
     }
 
-    "Given market model, When set market event is triggered, Then market state is updated" {
+    "Given market model from nav stack, When set market event is triggered, Then market state is updated" {
         val marketModel = provideMarketList(1).first().toMarketModel()
 
         viewModel.event(MarketDetailContract.Event.SetMarket(market = marketModel))
@@ -64,7 +64,7 @@ class MarketDetailViewModelTest : StringSpec({
         marketState.data shouldBe marketModel
     }
 
-    "Given market detail use case, When get market detail is triggered, Then loading and loaded states are set" {
+    "Given calling market detail use case, When get market detail is triggered, Then loading and loaded states are set" {
         val marketDetail = provideMarketDetail()
         coEvery { getMarketDetailUseCase(id = any()) } returns flowOf(Resource.Success(marketDetail))
 
