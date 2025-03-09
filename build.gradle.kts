@@ -5,18 +5,18 @@ import org.apache.tools.ant.taskdefs.condition.Os
 plugins {
     libs.plugins.apply {
         alias(android.application) apply false
-        alias(kotlin.parcelize) apply false
         alias(android.library) apply false
         alias(kotlin.android) apply false
+        alias(ksp) apply false
+        alias(kotlin.parcelize) apply false
         alias(hilt.android) apply false
         alias(kotliner) apply false
         alias(detekt) apply true // Needs to be applied at the root, unlike others.
-        alias(ksp) apply false
         alias(compose) apply false
     }
 }
 
-gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))
+//gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))
 
 // Run it with: gradle assembleRelease -PcomposeCompilerReports=true
 subprojects {

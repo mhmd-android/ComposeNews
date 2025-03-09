@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
+import ir.composenews.base.LoadableData
 import ir.composenews.uimarket.model.MarketModel
 import kotlinx.collections.immutable.persistentListOf
 import org.junit.Rule
@@ -43,19 +44,19 @@ class MarketListScreenTest {
             TestableMarketListScreen(
                 marketListState =
                 MarketListContract.State(
-                    marketList =
-                    persistentListOf(
-                        MarketModel(
-                            id = "1",
-                            name = "Bitcoin",
-                            symbol = "BTC",
-                            currentPrice = 50000.0,
-                            priceChangePercentage24h = 5.0,
-                            imageUrl = "",
-                            isFavorite = false,
-                        ),
+                    marketList = LoadableData.Loaded(
+                        persistentListOf(
+                            MarketModel(
+                                id = "1",
+                                name = "Bitcoin",
+                                symbol = "BTC",
+                                currentPrice = 50000.0,
+                                priceChangePercentage24h = 5.0,
+                                imageUrl = "",
+                                isFavorite = false,
+                            )
+                        )
                     ),
-                    refreshing = false,
                     showFavoriteList = false,
                 ),
                 showFavoriteList = false,

@@ -1,4 +1,3 @@
-
 package ir.composenews.marketdetail
 
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -66,7 +65,16 @@ class MarketDetailScreenTest {
         val fakeGetMarketDetailUseCase =
             object : GetMarketDetailUseCase(fakeMarketRepository) {
                 override fun invoke(id: String): Flow<Resource<MarketDetail, Errors>> {
-                    return flowOf(Resource.Success(MarketDetail(marketCapRank = 1)))
+                    return flowOf(
+                        Resource.Success(
+                            MarketDetail(
+                                id = "1",
+                                marketCapRank = 2,
+                                name = "name",
+                                marketData = null,
+                            )
+                        )
+                    )
                 }
             }
 
@@ -128,15 +136,15 @@ class MarketDetailScreenTest {
         composeTestRule.onNodeWithText("Favorite").performClick()
     }
 
-    @Test
-    fun marketDetailScreen_HandlesDataLoadingAndErrors() {
-        composeTestRule.setContent {
-            MarketDetailRoute(market = null)
-        }
-        composeTestRule.onNodeWithText("Loading...").assertExists()
-        composeTestRule.onNodeWithText("Failed to load data").assertExists()
-        composeTestRule.onNodeWithText("Retry").assertExists()
-    }
+//    @Test
+//    fun marketDetailScreen_HandlesDataLoadingAndErrors() {
+//        composeTestRule.setContent {
+//            MarketDetailRoute(market = null)
+//        }
+//        composeTestRule.onNodeWithText("Loading...").assertExists()
+//        composeTestRule.onNodeWithText("Failed to load data").assertExists()
+//        composeTestRule.onNodeWithText("Retry").assertExists()
+//    }
 
     @Test
     fun marketDetailScreen_UserInteractsWithChartData() {

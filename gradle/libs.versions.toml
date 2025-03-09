@@ -7,11 +7,11 @@ projectTargetSdkVersion = "35"
 projectCompileSdkVersion = "35"
 projectVersionCode = "1"
 
-kotlin = "2.0.21"
-kotlinter = "3.16.0"
-ksp = "2.0.21-1.0.28"
+kotlin = "2.1.10"
+kotlinter = "5.0.1"
+ksp = "2.1.10-1.0.31"
 kotlinxImmutableCollection = "0.3.8"
-androidGradlePlugin = "8.8.2"
+androidGradlePlugin = "8.9.0"
 
 ktx = "1.15.0"
 
@@ -24,13 +24,13 @@ composeWear = "1.4.1"
 wearToolingPreview = "1.0.0"
 horologistComposeLayout = "0.6.17"
 
-detekt = "1.23.2"
-hilt = "2.52"
+detekt = "1.23.8"
+hilt = "2.53.1"
 androidHiltCompiler = "1.2.0"
 hiltNavigationCompose = "1.2.0"
 hiltWork = "1.2.0"
 javaxInject = "1"
-lottieAnimation = "6.4.0"
+lottieAnimation = "6.6.1"
 
 coroutinesCore = "1.10.1"
 
