@@ -18,8 +18,6 @@ dependencies {
         implementation(core.uimarket)
     }
     libs.apply {
-        implementation(espresso.core)
-        implementation(compose.ui.test.manifest)
-        implementation(compose.ui.test.junit4)
+        testImplementation(turbine)
     }
 }
