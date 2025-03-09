@@ -1,3 +1,5 @@
+@file:Suppress("MaxLineLength")
+
 package ir.composenews.marketdetail
 
 import app.cash.turbine.test
