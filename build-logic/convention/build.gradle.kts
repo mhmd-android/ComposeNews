@@ -1,6 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     `kotlin-dsl`
 }
+
+group = "ir.composenews.buildlogic"
+
 
 // Configure the build-logic plugins to target JDK 17
 // This matches the JDK used to build the project, and is not related to what is running on device.
@@ -8,8 +13,11 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
+
 kotlin {
-    jvmToolchain(17)
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
 }
 
 dependencies {
@@ -18,6 +26,13 @@ dependencies {
         compileOnly(kotlin.gradlePlugin)
         compileOnly(detekt.gradlePlugin)
         compileOnly(ktlint.kotlinter)
+    }
+}
+
+tasks {
+    validatePlugins {
+        enableStricterValidation = true
+        failOnWarning = true
     }
 }
 
