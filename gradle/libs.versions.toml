@@ -175,6 +175,7 @@ compose = [
     "compose-ui-preview",
     "compose-ui-tooling",
     "compose-ui-test-manifest",
+    "compose-ui-test-junit4",
     "compose-material3",
 ]
 kotest = [

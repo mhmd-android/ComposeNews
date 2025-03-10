@@ -1,4 +1,4 @@
-@file:Suppress("MaxLineLength")
+@file:Suppress("MaxLineLength", "ktlint")
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
