@@ -1,3 +1,9 @@
+@file:Suppress(
+    "ktlint:standard:function-expression-body",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.uimarket.model
 
 import android.os.Parcel

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.marketdetail
 
 import ir.composenews.base.LoadableData

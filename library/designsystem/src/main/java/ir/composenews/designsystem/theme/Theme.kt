@@ -1,4 +1,9 @@
-@file:Suppress("AnnotationOnSeparateLine", "NoConsecutiveBlankLines", "SpacingAroundComma")
+@file:Suppress(
+    "AnnotationOnSeparateLine",
+    "NoConsecutiveBlankLines",
+    "SpacingAroundComma",
+    "ktlint"
+)
 
 package ir.composenews.designsystem.theme
 

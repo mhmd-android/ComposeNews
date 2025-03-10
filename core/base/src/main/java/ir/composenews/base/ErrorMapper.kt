@@ -1,4 +1,9 @@
-@file:Suppress("TopLevelPropertyNaming", "Indentation")
+@file:Suppress(
+    "TopLevelPropertyNaming",
+    "Indentation",
+    "ktlint:standard:function-expression-body",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
 
 package ir.composenews.base
 

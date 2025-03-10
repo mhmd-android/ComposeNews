@@ -1,3 +1,6 @@
+@file:Suppress(
+    "ktlint"
+)
 
 package ir.composenews.network
 

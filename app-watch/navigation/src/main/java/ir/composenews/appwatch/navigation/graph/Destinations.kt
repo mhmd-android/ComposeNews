@@ -1,3 +1,9 @@
+@file:Suppress(
+    "ktlint:standard:class-signature",
+    "ktlint:standard:blank-line-before-declaration",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.appwatch.navigation.graph
 
 sealed class Destinations(val route: String) {

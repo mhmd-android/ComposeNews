@@ -1,4 +1,4 @@
-@file:Suppress("MaxLineLength")
+@file:Suppress("MaxLineLength", "ktlint")
 
 package ir.composenews.data.mapper
 

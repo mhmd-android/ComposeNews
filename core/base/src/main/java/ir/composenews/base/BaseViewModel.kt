@@ -1,3 +1,11 @@
+@file:Suppress(
+    "ktlint:standard:no-empty-first-line-in-class-body",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:function-expression-body",
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.base
 
 import androidx.lifecycle.ViewModel

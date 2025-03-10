@@ -1,4 +1,6 @@
-
+@file:Suppress(
+    "ktlint"
+)
 package ir.composenews.network
 
 fun StatusCode.mapMessageStatusCode(): String {

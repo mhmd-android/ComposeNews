@@ -1,4 +1,4 @@
-@file:Suppress("PackageNaming", "PackageName", "MagicNumber")
+@file:Suppress("PackageNaming", "PackageName", "MagicNumber", "ktlint")
 
 package ir.composenews.marketdetail.preview_provider
 

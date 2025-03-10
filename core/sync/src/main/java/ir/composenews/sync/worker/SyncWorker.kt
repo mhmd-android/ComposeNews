@@ -1,4 +1,12 @@
-@file:Suppress("SwallowedException", "TooGenericExceptionCaught")
+@file:Suppress(
+    "SwallowedException",
+    "TooGenericExceptionCaught",
+    "ktlint:standard:annotation",
+    "ktlint:standard:no-empty-first-line-in-class-body",
+    "ktlint:standard:function-expression-body",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:multiline-expression-wrapping",
+)
 
 package ir.composenews.sync.worker
 

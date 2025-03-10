@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.marketdetail
 
 import androidx.compose.ui.test.junit4.createComposeRule

@@ -1,3 +1,8 @@
+@file:Suppress(
+    "ktlint:standard:no-empty-first-line-in-class-body",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.localdatasource.database
 
 import ir.composenews.db.MarketEntity

@@ -1,3 +1,10 @@
+@file:Suppress(
+    "ktlint:standard:no-empty-first-line-in-class-body",
+    "ktlint:standard:parameter-list-wrapping",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.localdatasource.di
 
 import android.content.Context

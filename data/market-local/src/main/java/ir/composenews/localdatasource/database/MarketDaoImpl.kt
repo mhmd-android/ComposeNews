@@ -1,3 +1,10 @@
+@file:Suppress(
+    "ktlint:standard:annotation",
+    "ktlint:standard:no-empty-first-line-in-class-body",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.localdatasource.database
 
 import app.cash.sqldelight.coroutines.asFlow

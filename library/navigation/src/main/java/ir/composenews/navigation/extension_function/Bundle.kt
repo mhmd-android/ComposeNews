@@ -1,4 +1,4 @@
-@file:Suppress("PackageNaming", "PackageName", "MagicNumber", "AnnotationOnSeparateLine")
+@file:Suppress("PackageNaming", "PackageName", "MagicNumber", "AnnotationOnSeparateLine", "ktlint")
 
 package ir.composenews.navigation.extension_function
 

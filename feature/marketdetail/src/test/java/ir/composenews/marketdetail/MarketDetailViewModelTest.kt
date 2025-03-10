@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.marketdetail
 
 import io.kotest.core.spec.style.StringSpec

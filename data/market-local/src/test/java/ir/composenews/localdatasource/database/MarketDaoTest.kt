@@ -1,4 +1,7 @@
-@file:Suppress("MaxLineLength")
+@file:Suppress(
+    "MaxLineLength",
+    "ktlint:standard:class-signature",
+)
 
 package ir.composenews.localdatasource.database
 

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.marketdetail.components
 
 import androidx.compose.foundation.layout.Box

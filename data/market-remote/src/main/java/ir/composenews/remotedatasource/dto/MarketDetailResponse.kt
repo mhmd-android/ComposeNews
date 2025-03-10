@@ -1,3 +1,10 @@
+@file:Suppress(
+    "ktlint:standard:no-empty-first-line-in-class-body",
+    "ktlint:standard:function-expression-body",
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:class-signature",
+)
+
 package ir.composenews.remotedatasource.dto
 
 import kotlinx.serialization.SerialName

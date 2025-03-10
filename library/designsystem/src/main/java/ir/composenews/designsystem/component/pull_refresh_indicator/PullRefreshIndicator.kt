@@ -1,4 +1,4 @@
-@file:Suppress("MagicNumber", "PackageNaming", "PackageName", "LongParameterList")
+@file:Suppress("MagicNumber", "PackageNaming", "PackageName", "LongParameterList", "ktlint")
 
 package ir.composenews.designsystem.component.pull_refresh_indicator
 

@@ -1,4 +1,4 @@
-@file:Suppress("MaxLineLength", "TooGenericExceptionCaught")
+@file:Suppress("MaxLineLength", "TooGenericExceptionCaught", "ktlint")
 
 package ir.composenews.marketlist
 

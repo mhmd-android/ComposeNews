@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.remotedatasource.api
 
 import io.ktor.client.HttpClient

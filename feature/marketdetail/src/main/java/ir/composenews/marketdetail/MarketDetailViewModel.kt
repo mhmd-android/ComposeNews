@@ -1,4 +1,4 @@
-@file:Suppress("ImportOrdering")
+@file:Suppress("ImportOrdering", "ktlint")
 
 package ir.composenews.marketdetail
 

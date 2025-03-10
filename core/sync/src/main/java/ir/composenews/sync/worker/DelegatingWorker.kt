@@ -3,6 +3,11 @@
     "Indentation",
     "SwallowedException",
     "TooGenericExceptionCaught",
+    "ktlint:standard:chain-method-continuation",
+    "ktlint:standard:no-empty-first-line-in-class-body",
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:blank-line-before-declaration",
+    "ktlint:standard:trailing-comma-on-call-site"
 )
 
 package ir.composenews.sync.worker

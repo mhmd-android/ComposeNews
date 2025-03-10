@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.marketlist
 
 import androidx.activity.ComponentActivity

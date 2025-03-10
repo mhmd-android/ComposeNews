@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.uimarket.mapper
 
 import ir.composenews.domain.model.Market

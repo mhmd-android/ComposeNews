@@ -1,4 +1,11 @@
-@file:Suppress("UnusedPrivateMember", "LongMethod", "ForbiddenComment")
+@file:Suppress(
+    "UnusedPrivateMember",
+    "LongMethod",
+    "ForbiddenComment",
+    "ktlint:standard:function-naming",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:multiline-expression-wrapping",
+)
 
 package ir.composenews.appwatch.ui.details
 

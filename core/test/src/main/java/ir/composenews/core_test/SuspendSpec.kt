@@ -1,4 +1,8 @@
-@file:Suppress("PackageNaming", "PackageName")
+@file:Suppress(
+    "PackageNaming",
+    "PackageName",
+    "ktlint"
+)
 
 package ir.composenews.core_test
 
