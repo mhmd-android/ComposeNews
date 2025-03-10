@@ -1,24 +1,29 @@
-@file:Suppress("TooGenericExceptionThrown", "ktlint")
+@file:Suppress("TooGenericExceptionThrown", "MaxLineLength")
 
 package ir.composenews.marketlist
 
+import app.cash.turbine.test
 import io.kotest.core.spec.style.StringSpec
-import io.mockk.Runs
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.coEvery
-import io.mockk.just
+import io.mockk.coVerify
 import io.mockk.mockk
+import ir.composenews.base.LoadableData
 import ir.composenews.core_test.MainCoroutineListener
 import ir.composenews.core_test.dispatcher.TestDispatcherProvider
 import ir.composenews.domain.model.Market
 import ir.composenews.domain.use_case.GetFavoriteMarketListUseCase
 import ir.composenews.domain.use_case.GetMarketListUseCase
 import ir.composenews.domain.use_case.ToggleFavoriteMarketListUseCase
+import ir.composenews.network.Errors
+import ir.composenews.uimarket.mapper.toMarket
+import ir.composenews.uimarket.mapper.toMarketModel
 import ir.composenews.uimarket.model.MarketModel
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
 import java.util.UUID
 import kotlin.random.Random
 
@@ -33,7 +38,7 @@ class MarketListViewModelTest : StringSpec({
 
     listeners(MainCoroutineListener())
 
-    beforeAny {
+    beforeEach {
         viewModel = MarketListViewModel(
             getMarketListUseCase,
             getFavoriteMarketListUseCase,
@@ -43,206 +48,79 @@ class MarketListViewModelTest : StringSpec({
     }
 
     "Given initial state, When ViewModel is created, Then state should be default" {
-//        viewModel.state.value shouldBe MarketListContract.State(
-//            marketList = persistentListOf(),
-//            refreshing = false,
-//            showFavoriteList = false,
-//            showFavoriteEmptyState = false,
-//        )
+        val initialState = viewModel.state.value
+
+        initialState.marketList.shouldBeInstanceOf<LoadableData.Initial>()
+        initialState.showFavoriteList shouldBe false
     }
 
-    "Given show favorite list is false, When OnGetMarketList is triggered, Then calls getMarketListUseCase" {
-
-//        viewModel.baseState.test {
-//            val initState = awaitItem()
-//            initState shouldBe BaseContract.BaseState.OnLoading
-//            val afterState = awaitItem()
-//            afterState shouldBe BaseContract.BaseState.OnSuccess
-//        }
-//
-//        viewModel.state.test {
-//            val initState = awaitItem()
-//            initState shouldBe MarketListContract.State(refreshing = false)
-//
-//            viewModel.event(MarketListContract.Event.OnGetMarketList)
-//
-//            val loadingState = awaitItem()
-//            loadingState shouldBe MarketListContract.State(refreshing = true)
-//            val afterState = awaitItem()
-//            afterState shouldBe MarketListContract.State(refreshing = false)
-//        }
-
-//        coVerify { getMarketListUseCase.invoke() }
-    }
-
-    "Given show favorite list is true, When OnGetMarketList is triggered, Then calls getFavoriteMarketListUseCase" {
-        coEvery { getFavoriteMarketListUseCase.invoke() } returns flowOf(emptyList())
+    "Given ViewModel state, When show favorite list is toggled, Then state updates correctly" {
         viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(showFavoriteList = true))
 
-        viewModel.event(MarketListContract.Event.OnGetMarketList)
-
-//        coVerify { getFavoriteMarketListUseCase.invoke() }
+        viewModel.state.value.showFavoriteList shouldBe true
     }
 
-    "Given market list fetch succeeds, When OnGetMarketList is triggered, Then updates state with market list" {
+    "Given market list use case, When market list is successfully fetched, Then loaded state contains market data" {
         val marketList = provideMarketList(2)
-        coEvery { getMarketListUseCase.invoke() } returns flowOf(marketList)
+        coEvery { getMarketListUseCase() } returns flowOf(marketList)
 
-        viewModel.event(MarketListContract.Event.OnGetMarketList)
+        viewModel.state.test {
+            val initState = awaitItem().marketList
+            initState.shouldBeInstanceOf<LoadableData.Initial>()
 
-//        viewModel.state.value.marketList shouldBe marketList.map { it.toMarketModel() }
-//            .toPersistentList()
+            viewModel.event(MarketListContract.Event.OnGetMarketList)
+
+            val loadingState = awaitItem().marketList
+            loadingState.shouldBeInstanceOf<LoadableData.Loading>()
+
+            val loadedState = awaitItem().marketList
+            loadedState shouldBe LoadableData.Loaded(data = marketList.map { it.toMarketModel() })
+        }
     }
 
-    "Given favorite market toggle, When OnFavoriteClick is triggered, Then calls toggleFavoriteMarketListUseCase" {
-        val marketModel = MarketModel(
-            id = "1",
-            name = "Bitcoin",
-            symbol = "BTC",
-            currentPrice = 50000.0,
-            priceChangePercentage24h = 5.0,
-            imageUrl = "https://example.com/bitcoin.png",
-            isFavorite = false,
-        )
-        coEvery { toggleFavoriteMarketListUseCase.invoke(any()) } just Runs
+    "Given favorite list mode is enabled, When favorite market list is fetched, Then loaded state contains favorite markets" {
+        val favoriteMarketList = provideMarketList(1, isFavorite = true)
+        coEvery { getFavoriteMarketListUseCase() } returns flowOf(favoriteMarketList)
+
+        viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(showFavoriteList = true))
+        viewModel.event(MarketListContract.Event.OnGetMarketList)
+
+        val loadedState = viewModel.state.value.marketList
+        loadedState.shouldBeInstanceOf<LoadableData.Loaded<PersistentList<MarketModel>>>()
+        loadedState.data.size shouldBe 1
+        loadedState.data.first().isFavorite shouldBe true
+    }
+
+    "Given a market, When favorite click event is triggered, Then toggle favorite use case is called" {
+        val marketModel = provideMarketList(size = 1).first().toMarketModel()
+        coEvery { toggleFavoriteMarketListUseCase(any()) } returns Unit
 
         viewModel.event(MarketListContract.Event.OnFavoriteClick(market = marketModel))
 
-//        coVerify { toggleFavoriteMarketListUseCase.invoke(marketModel.toMarket()) }
+        coVerify { toggleFavoriteMarketListUseCase(marketModel.toMarket()) }
     }
 
-    "Given an exception occurs, When fetching market list, Then updates state with error" {
-        coEvery { getMarketListUseCase.invoke() } returns flow { throw RuntimeException("Error occurred") }
+    "Given market list use case, When market list fetch fails, Then error state is set" {
+        val exception = RuntimeException("Network Error")
+        coEvery { getMarketListUseCase() } returns flow { throw exception }
 
         viewModel.event(MarketListContract.Event.OnGetMarketList)
 
-//        viewModel.baseState.value shouldBe BaseContract.BaseState.OnError(
-//            errors = Errors.ExceptionError(message = "Error occurred"),
-//        )
-    }
-
-    "With OnSetShowFavoriteList event and showFavoriteList is false then we should hide favorite list" {
-        runTest {
-            val expected = false
-
-            viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(expected))
-            advanceUntilIdle()
-
-//            val actual = viewModel.state.value.showFavoriteList
-
-//            actual shouldBeEqual expected
-        }
-    }
-
-    "With OnSetShowFavoriteList event and showFavoriteList is true then we should show favorite list" {
-        runTest {
-            val expected = true
-
-            viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(expected))
-            advanceUntilIdle()
-
-//            val actual = viewModel.state.value.showFavoriteList
-
-//            actual shouldBeEqual expected
-        }
-    }
-
-    "With OnGetMarketList event and showFavorite is false  we should get all market items ()" {
-        runTest {
-            // Given
-            val expectedMarketList = provideMarketList(10)
-            coEvery { getMarketListUseCase.invoke() } returns flowOf(expectedMarketList)
-
-            // When
-            viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(false))
-            viewModel.event(MarketListContract.Event.OnGetMarketList)
-            advanceUntilIdle()
-
-            // Then
-//            val actualMarketList = viewModel.state.value.marketList.map { it.toMarket() }
-
-//            actualMarketList shouldBeEqual expectedMarketList
-        }
-    }
-
-    "With OnGetMarketList event and showFavorite is true  we should get all favorite market items ()" {
-        runTest {
-            // Given
-            val expectedMarketList = provideMarketList(10)
-            coEvery { getFavoriteMarketListUseCase.invoke() } returns flowOf(expectedMarketList)
-
-            // When
-            viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(true))
-            viewModel.event(MarketListContract.Event.OnGetMarketList)
-            advanceUntilIdle()
-
-            // Then
-//            val actualMarketList = viewModel.state.value.marketList.map { it.toMarket() }
-
-//            actualMarketList shouldBeEqual expectedMarketList
-        }
-    }
-
-    "With OnRefresh event and showFavorite is true we should refresh market list with favorites" {
-        runTest {
-            val oldMarketList = provideMarketList(2)
-
-            coEvery { getFavoriteMarketListUseCase.invoke() } returns flowOf(oldMarketList)
-
-            viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(true))
-            viewModel.event(MarketListContract.Event.OnGetMarketList)
-
-            advanceUntilIdle()
-
-//            oldMarketList shouldBeEqual viewModel.state.value.marketList.map { it.toMarket() }
-
-            val newMarketList = provideMarketList(4)
-
-            coEvery { getFavoriteMarketListUseCase.invoke() } returns flowOf(newMarketList)
-
-//            viewModel.event(MarketListContract.Event.OnRefresh)
-
-            advanceUntilIdle()
-//            val actualMarketList = viewModel.state.value.marketList.map { it.toMarket() }
-
-//            newMarketList shouldBeEqual actualMarketList
-//            viewModel.state.value.refreshing shouldBeEqual false
-        }
-    }
-
-    "With OnRefresh event and showFavorite is false we should refresh market list with favorites" {
-        runTest {
-            val oldMarketList = provideMarketList(5)
-
-            coEvery { getMarketListUseCase.invoke() } returns flowOf(oldMarketList)
-
-            viewModel.event(MarketListContract.Event.OnSetShowFavoriteList(false))
-
-            val newMarketList = provideMarketList(5)
-
-            coEvery { getMarketListUseCase.invoke() } returns flowOf(newMarketList)
-
-//            viewModel.event(MarketListContract.Event.OnRefresh)
-            advanceUntilIdle()
-
-//            val actualMarketList = viewModel.state.value.marketList.map { it.toMarket() }
-
-//            newMarketList shouldBeEqual actualMarketList
-//            viewModel.state.value.refreshing shouldBeEqual false
-        }
+        val errorState = viewModel.state.value.marketList
+        errorState.shouldBeInstanceOf<LoadableData.Error>()
+        (errorState.error as Errors.ExceptionError).message shouldBe exception.message
     }
 })
 
-private fun provideMarketList(size: Int): List<Market> {
-    return (0 until size).map {
+private fun provideMarketList(size: Int, isFavorite: Boolean = false): List<Market> =
+    (0 until size).map {
         Market(
             id = UUID.randomUUID().toString(),
             name = "Ethereum$it",
             symbol = "XRP",
             currentPrice = Random.nextDouble(300.0, 2300.0),
             priceChangePercentage24h = Random.nextDouble(300.0, 2300.0),
-            isFavorite = false,
+            isFavorite = isFavorite,
             imageUrl = "google.com",
         )
     }
-}

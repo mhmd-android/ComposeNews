@@ -20,8 +20,6 @@ dependencies {
     }
     libs.apply {
         implementation(kotlinx.collections.immutable)
-        implementation(espresso.core)
-        implementation(compose.ui.test.manifest)
-        implementation(compose.ui.test.junit4)
+        testImplementation(turbine)
     }
 }
