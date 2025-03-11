@@ -1,4 +1,8 @@
-@file:Suppress("PackageNaming", "PackageName")
+@file:Suppress(
+    "PackageNaming",
+    "PackageName",
+    "ktlint:standard:class-signature",
+)
 
 package ir.composenews.domain.use_case
 

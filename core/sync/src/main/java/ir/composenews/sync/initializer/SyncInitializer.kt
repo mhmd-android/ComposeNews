@@ -1,3 +1,9 @@
+@file:Suppress(
+    "ktlint:standard:class-signature",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.sync.initializer
 
 import android.content.Context

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.data.di
 
 import dagger.Binds

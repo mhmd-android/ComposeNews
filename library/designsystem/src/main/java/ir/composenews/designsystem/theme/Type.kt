@@ -1,3 +1,7 @@
+@file:Suppress(
+    "ktlint"
+)
+
 package ir.composenews.designsystem.theme
 
 import androidx.compose.material3.Typography

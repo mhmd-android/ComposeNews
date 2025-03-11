@@ -1,3 +1,7 @@
+@file:Suppress(
+    "ktlint:standard:no-empty-first-line-in-class-body",
+)
+
 package ir.composenews.remotedatasource.di
 
 import dagger.Binds

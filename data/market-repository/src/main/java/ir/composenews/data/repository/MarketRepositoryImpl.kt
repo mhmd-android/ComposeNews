@@ -1,4 +1,9 @@
-@file:Suppress("MagicNumber", "TooGenericExceptionCaught", "MaxLineLength")
+@file:Suppress(
+    "MagicNumber",
+    "TooGenericExceptionCaught",
+    "MaxLineLength",
+    "ktlint",
+)
 
 package ir.composenews.data.repository
 

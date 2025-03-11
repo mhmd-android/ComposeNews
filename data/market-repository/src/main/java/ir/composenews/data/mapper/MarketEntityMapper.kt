@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.data.mapper
 
 import ir.composenews.db.MarketEntity

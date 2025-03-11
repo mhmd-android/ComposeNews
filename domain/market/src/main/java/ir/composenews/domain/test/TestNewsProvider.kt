@@ -1,3 +1,7 @@
+@file:Suppress(
+    "ktlint:standard:multiline-expression-wrapping",
+)
+
 package ir.composenews.domain.test
 
 import ir.composenews.domain.model.Market

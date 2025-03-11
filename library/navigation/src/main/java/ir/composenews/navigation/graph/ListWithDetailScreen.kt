@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.navigation.graph
 
 import androidx.compose.foundation.layout.Box

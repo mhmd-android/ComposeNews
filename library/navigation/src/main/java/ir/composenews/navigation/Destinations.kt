@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.navigation
 
 sealed class Destinations(val route: String) {

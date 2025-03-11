@@ -1,3 +1,11 @@
+@file:Suppress(
+    "ktlint:standard:class-signature",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:chain-method-continuation",
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.sync
 
 import android.app.Notification

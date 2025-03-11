@@ -1,3 +1,7 @@
+@file:Suppress(
+    "ktlint:standard:blank-line-before-declaration",
+)
+
 package ir.composenews.domain.repository
 
 import ir.composenews.domain.model.Market

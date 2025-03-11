@@ -1,3 +1,9 @@
+@file:Suppress(
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:chain-method-continuation",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.konsist
 
 import com.lemonappdev.konsist.api.Konsist

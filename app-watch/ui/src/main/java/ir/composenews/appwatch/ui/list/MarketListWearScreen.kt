@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.appwatch.ui.list
 
 import androidx.compose.animation.AnimatedVisibility

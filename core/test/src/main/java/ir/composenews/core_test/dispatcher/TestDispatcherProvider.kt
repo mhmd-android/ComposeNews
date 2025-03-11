@@ -1,4 +1,9 @@
-@file:Suppress("PackageNaming", "PackageName")
+@file:Suppress(
+    "PackageNaming",
+    "PackageName",
+    "ktlint:standard:class-signature",
+    "ktlint:standard:annotation",
+)
 
 package ir.composenews.core_test.dispatcher
 

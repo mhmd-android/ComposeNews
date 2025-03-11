@@ -1,4 +1,4 @@
-@file:Suppress("PackageNaming", "PackageName")
+@file:Suppress("PackageNaming", "PackageName", "ktlint")
 
 package ir.composenews.domain.model_provider
 

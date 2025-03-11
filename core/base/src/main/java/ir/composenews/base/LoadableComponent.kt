@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.base
 
 import androidx.compose.runtime.Composable

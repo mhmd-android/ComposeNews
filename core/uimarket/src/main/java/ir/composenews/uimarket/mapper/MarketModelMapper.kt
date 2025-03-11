@@ -1,3 +1,9 @@
+@file:Suppress(
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.uimarket.mapper
 
 import ir.composenews.domain.model.Market

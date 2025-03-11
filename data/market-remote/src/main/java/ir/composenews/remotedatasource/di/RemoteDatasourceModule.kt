@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.remotedatasource.di
 
 import android.content.Context

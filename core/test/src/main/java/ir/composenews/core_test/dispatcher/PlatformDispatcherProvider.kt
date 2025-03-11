@@ -1,4 +1,9 @@
-@file:Suppress("PackageNaming", "PackageName")
+@file:Suppress(
+    "PackageNaming",
+    "PackageName",
+    "ktlint:standard:annotation",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
 
 package ir.composenews.core_test.dispatcher
 

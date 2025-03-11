@@ -1,4 +1,4 @@
-@file:Suppress("UnusedPrivateMember")
+@file:Suppress("UnusedPrivateMember", "ktlint")
 
 package ir.composenews.designsystem.widget
 

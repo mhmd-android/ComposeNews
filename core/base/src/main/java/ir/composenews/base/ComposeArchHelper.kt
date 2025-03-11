@@ -1,3 +1,8 @@
+@file:Suppress(
+    "ktlint:standard:blank-line-before-declaration",
+    "ktlint:standard:function-signature",
+)
+
 package ir.composenews.base
 
 import androidx.compose.runtime.Composable

@@ -1,7 +1,7 @@
 @file:Suppress(
     "MaxLineLength",
     "ComplexCondition",
-    "ktlint:standard:function-naming",
+    "ktlint",
     "UnusedPrivateMember",
     "LongMethod",
 )

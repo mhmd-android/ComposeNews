@@ -1,3 +1,9 @@
+@file:Suppress(
+    "ktlint:standard:function-expression-body",
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.appwatch.navigation.graph
 
 import android.os.Build

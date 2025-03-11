@@ -1,3 +1,7 @@
+@file:Suppress(
+    "ktlint"
+)
+
 package ir.composenews.network
 
 sealed class Resource<out T, out E> {

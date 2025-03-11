@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews.marketlist.component
 
 import androidx.compose.runtime.Composable

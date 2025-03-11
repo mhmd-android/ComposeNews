@@ -1,3 +1,9 @@
+@file:Suppress(
+    "ktlint:standard:class-signature",
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.extensions
 
 import io.kotest.core.spec.style.StringSpec

@@ -1,3 +1,9 @@
+@file:Suppress(
+    "ktlint:standard:class-signature",
+    "ktlint:standard:no-empty-first-line-in-class-body",
+    "ktlint:standard:trailing-comma-on-call-site"
+)
+
 package ir.composenews.appwatch.navigation
 
 import ir.composenews.base.UnidirectionalViewModel

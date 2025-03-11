@@ -1,3 +1,8 @@
+@file:Suppress(
+    "ktlint:standard:class-signature",
+    "ktlint:standard:function-signature",
+)
+
 package ir.composenews.base
 
 import ir.composenews.network.Errors

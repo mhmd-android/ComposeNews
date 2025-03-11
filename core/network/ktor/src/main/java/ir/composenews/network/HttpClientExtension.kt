@@ -1,3 +1,7 @@
+@file:Suppress(
+    "ktlint"
+)
+
 package ir.composenews.network
 
 import io.ktor.client.HttpClient

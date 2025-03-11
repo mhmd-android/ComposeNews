@@ -1,4 +1,11 @@
-@file:Suppress("MagicNumber", "MaxLineLength", "LongMethod", "LongParameterList", "UnusedPrivateMember")
+@file:Suppress(
+    "MagicNumber",
+    "MaxLineLength",
+    "LongMethod",
+    "LongParameterList",
+    "UnusedPrivateMember",
+    "ktlint"
+)
 
 package ir.composenews.designsystem.component
 

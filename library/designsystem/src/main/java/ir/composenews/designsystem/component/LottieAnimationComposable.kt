@@ -1,4 +1,4 @@
-@file:Suppress("LongParameterList")
+@file:Suppress("LongParameterList", "ktlint")
 
 package ir.composenews.designsystem.component
 

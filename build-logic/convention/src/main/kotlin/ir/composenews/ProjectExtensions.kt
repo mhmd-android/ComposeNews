@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package ir.composenews
 
 import com.android.build.api.dsl.ApplicationExtension

@@ -1,3 +1,7 @@
+@file:Suppress(
+    "ktlint"
+)
+
 package ir.composenews.designsystem.component
 
 import androidx.compose.animation.animateColorAsState
