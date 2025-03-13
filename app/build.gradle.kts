@@ -1,8 +1,8 @@
+@file:Suppress("ForbiddenComment")
 plugins {
-    id("composenews.android.application")
-    id("composenews.android.application.compose")
-    id("composenews.android.hilt")
-}
+    alias(libs.plugins.composenews.android.application)
+    alias(libs.plugins.composenews.android.application.compose)
+    alias(libs.plugins.composenews.android.hilt)}
 
 android {
     namespace = libs.versions.projectApplicationId.get()
@@ -29,6 +29,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // To publish on the Play store a private signing key is required, but to allow anyone
+            // who clones the code to sign and run the release variant, use the debug signing key.
+            // TODO: Abstract the signing configuration to a separate file to avoid hardcoding this.
+            signingConfig = signingConfigs.named("debug").get()
         }
     }
 }

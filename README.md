@@ -71,6 +71,7 @@ For the details of handling the  preview of composable functions in this code-ba
 
 ![](asset/large_screen.jpg)
 
+
 ### WearOS devices (Android-based smartwatches)
 ![Wear OS screenshots](asset/wearos.jpg)
 
@@ -79,6 +80,14 @@ For the details of handling the  preview of composable functions in this code-ba
 - [Git Hooks](documentation/GitHooks.md) - Learn about Git Hooks used in this project for code formatting and analysis.
 - [GitHub Actions](documentation/GitHubActions.md) - Explore the GitHub Actions workflows used to validate the code.
 - [Static Analysis](documentation/StaticAnalysis.md) - Discover how static analysis tools like Detekt and Ktlint are used in this project for code quality assurance.
+
+## Compose compiler metrics
+
+Run the following command to get and analyse compose compiler metrics:
+
+```bash
+./gradlew assembleRelease -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true
+```
 
 ## 🤝🏻 Contribute
 
