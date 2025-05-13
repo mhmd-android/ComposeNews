@@ -41,13 +41,6 @@ body:
       required: true
 
   - type: textarea
-    id: expected-behavior
-    attributes:
-      label: Expected Behavior
-      description: Describe what you expected to happen instead of the observed behavior.
-      placeholder: I expected it to...
-
-  - type: textarea
     id: environment
     attributes:
       label: Environment
@@ -63,10 +56,3 @@ body:
       label: Relevant logcat output
       description: Please paste any relevant logcat output or console errors. No need to add backticks, it will be formatted automatically.
       render: shell
-
-  - type: input
-    id: screenshots
-    attributes:
-      label: Screenshots (optional)
-      description: If applicable, add a link to a screenshot or drag and drop it directly in this issue.
-      placeholder: Drag and drop images here or paste a link.

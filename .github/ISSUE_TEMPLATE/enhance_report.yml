@@ -1,0 +1,54 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+title: "[Enhance]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature!  
+        Please fill out the form below as completely as possible.
+
+  - type: checkboxes
+    id: issue-check
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search the existing issues to see if someone has already requested this feature.
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: textarea
+    id: describe-problem
+    attributes:
+      label: Describe the problem
+      description: Is your feature request related to a problem? Please describe what you're trying to solve.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution
+      description: Describe the solution you would like to see implemented. Please be as clear and specific as possible.
+      placeholder: I'd like the app to...
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: Have you considered any alternative solutions or features? Please describe them.
+      placeholder: I've also thought about...
+
+  - type: dropdown
+    id: interest
+    attributes:
+      label: Would you like to work on this feature?
+      description: Let us know if you're interested in helping develop or contribute to this feature.
+      options:
+        - Yes, I'm interested in working on this feature
+        - No, I don't wish to contribute to this feature
+      default: 0
+    validations:
+      required: true
