@@ -1,0 +1,72 @@
+name: Bug Report
+description: File a bug report to help us improve the project.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to file a bug report!
+        Please make sure to fill in all required fields below so we can help you faster.
+
+  - type: checkboxes
+    id: issue-check
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search the issues to check if someone has already reported this bug or not.
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Please describe the bug clearly. What did you expect to happen, and what actually happened?
+      placeholder: Tell us what you observed and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Provide a list of steps to reproduce the issue. Include code, screenshots, or configuration as needed.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: Describe what you expected to happen instead of the observed behavior.
+      placeholder: I expected it to...
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please provide details about your setup.
+      placeholder: |
+        - OS: [e.g. Android 13, iOS 16, Windows 11]
+        - Device: [e.g. Samsung Galaxy S21, iPhone 13]
+        - App version: [e.g. 1.2.3]
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logcat output
+      description: Please paste any relevant logcat output or console errors. No need to add backticks, it will be formatted automatically.
+      render: shell
+
+  - type: input
+    id: screenshots
+    attributes:
+      label: Screenshots (optional)
+      description: If applicable, add a link to a screenshot or drag and drop it directly in this issue.
+      placeholder: Drag and drop images here or paste a link.
