@@ -1,6 +1,8 @@
-package ir.composenews
+package ir.composenews.conv
 
 import com.android.build.api.dsl.CommonExtension
+import ir.composenews.utils.vLibs
+import ir.composenews.utils.version
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.assign
@@ -18,9 +20,9 @@ internal fun Project.configureKotlinAndroid(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
 ) {
     commonExtension.apply {
-        compileSdk = Integer.parseInt(libs.findVersion("projectCompileSdkVersion").get().toString())
+        compileSdk = Integer.parseInt(vLibs.version("projectCompileSdkVersion"))
         defaultConfig {
-            minSdk = Integer.parseInt(libs.findVersion("projectMinSdkVersion").get().toString())
+            minSdk = Integer.parseInt(vLibs.version("projectMinSdkVersion"))
         }
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_17
